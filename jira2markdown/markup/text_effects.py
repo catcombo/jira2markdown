@@ -1,5 +1,6 @@
-from pyparsing import Char, Combine, Forward, LineEnd, LineStart, Literal, ParseResults, \
-    ParserElement, QuotedString, SkipTo, Suppress, White, Word, WordEnd, WordStart, alphanums, replaceWith
+from pyparsing import CaselessLiteral, Char, Combine, Forward, LineEnd, LineStart, Literal, Optional, ParseResults, \
+    ParserElement, QuotedString, SkipTo, Suppress, White, Word, WordEnd, WordStart, alphanums, alphas, hexnums, nums, \
+    replaceWith
 
 from jira2markdown.tokens import NotPrecededBy
 
@@ -50,16 +51,32 @@ class Color:
     def action(self, tokens: ParseResults) -> str:
         text = self.markup.transformString(tokens.text)
 
+        if tokens.red and tokens.green and tokens.blue:
+            color = f"#{int(tokens.red):x}{int(tokens.green):x}{int(tokens.blue):x}"
+        else:
+            color = tokens.color[0]
+
         if len(text.strip()) > 0:
-            return f'<font color="{tokens.color}">{text}</font>'
+            return f'<font color="{color}">{text}</font>'
         else:
             return ""
 
     @property
     def expr(self) -> ParserElement:
-        expr = Combine("{color:" + Word(alphanums + "#").setResultsName("color") + "}") + \
+        INTENSITY = Word(nums)
+        ALPHA = Word(nums + ".")
+        SEP = "," + Optional(White())
+        RGBA = CaselessLiteral("rgba(") \
+            + INTENSITY.setResultsName("red") + SEP \
+            + INTENSITY.setResultsName("green") + SEP \
+            + INTENSITY.setResultsName("blue") + SEP \
+            + ALPHA + ")"
+
+        COLOR = Word("#", hexnums) ^ Word(alphas) ^ RGBA
+        expr = Combine("{color:" + COLOR.setResultsName("color") + "}") + \
             SkipTo("{color}").setResultsName("text") + \
             Suppress("{color}")
+
         return expr.setParseAction(self.action)
 
 

@@ -1,5 +1,5 @@
-from pyparsing import CaselessLiteral, Combine, Forward, Optional, ParseResults, ParserElement, SkipTo, Suppress, Word, \
-    alphanums
+from pyparsing import CaselessLiteral, Combine, Forward, Optional, ParseResults, ParserElement, SkipTo, Suppress,\
+    Word, alphanums
 
 
 class MailTo:
