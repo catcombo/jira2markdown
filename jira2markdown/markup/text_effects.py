@@ -59,7 +59,7 @@ class Color:
         if len(text.strip()) > 0:
             return f'<font color="{color}">{text}</font>'
         else:
-            return ""
+            return text
 
     @property
     def expr(self) -> ParserElement:

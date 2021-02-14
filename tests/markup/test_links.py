@@ -8,6 +8,7 @@ def test_mailto():
 def test_link():
     assert convert("[http://jira.atlassian.com]") == "<http://jira.atlassian.com>"
     assert convert("[Atlassian|http://atlassian.com]") == "[Atlassian](http://atlassian.com)"
+    assert convert("[Text in square brackets]") == "[Text in square brackets]"
 
 
 def test_attachment():
