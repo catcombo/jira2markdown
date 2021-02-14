@@ -33,7 +33,7 @@ class Link:
                 SkipTo("|", failOn="]") + Suppress("|"),
                 default="",
             ).setResultsName("name")
-            + SkipTo("]").setResultsName("url")
+            + Combine("http" + SkipTo("]")).setResultsName("url")
             + "]",
         ).setParseAction(self.action)
 
