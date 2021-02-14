@@ -73,9 +73,11 @@ class Color:
             + ALPHA + ")"
 
         COLOR = Word("#", hexnums) ^ Word(alphas) ^ RGBA
-        expr = Combine("{color:" + COLOR.setResultsName("color") + "}") + \
-            SkipTo("{color}").setResultsName("text") + \
-            Suppress("{color}")
+        expr = Combine(
+            "{color:" + COLOR.setResultsName("color") + "}"
+            + SkipTo("{color}").setResultsName("text")
+            + "{color}",
+        )
 
         return expr.setParseAction(self.action)
 

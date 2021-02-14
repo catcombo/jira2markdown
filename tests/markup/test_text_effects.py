@@ -36,8 +36,9 @@ def test_color():
     look ma, red text!
 </font>
 """
-    assert convert("{color:#0077ff}  {color}") == ""
+    assert convert("{color:#0077ff}{color}") == ""
     assert convert("{color:black}\n{color}") == "\n"
+    assert convert("{color:#0077ff}  spaces around  {color}") == '<font color="#0077ff">  spaces around  </font>'
     assert convert("{color:rgba(255, 127, 63, 0.3)}text{color}") == '<font color="#ff7f3f">text</font>'
 
 
