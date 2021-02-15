@@ -8,7 +8,15 @@ class MailTo:
 
     @property
     def expr(self) -> ParserElement:
-        return Combine("[mailto:" + Word(alphanums + "@.-").setResultsName("email") + "]").setParseAction(self.action)
+        return Combine(
+            "["
+            + Optional(
+                SkipTo("|", failOn="]") + Suppress("|"),
+            )
+            + "mailto:"
+            + Word(alphanums + "@.-").setResultsName("email")
+            + "]",
+        ).setParseAction(self.action)
 
 
 class Link:
