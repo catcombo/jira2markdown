@@ -24,7 +24,7 @@ class Link:
         self.markup = markup
 
     def action(self, tokens: ParseResults) -> str:
-        name = tokens.name[0]
+        name = getattr(tokens, "name", "")
         url = tokens.url
 
         if len(name) > 0:
@@ -35,15 +35,9 @@ class Link:
 
     @property
     def expr(self) -> ParserElement:
-        return Combine(
-            "["
-            + Optional(
-                SkipTo("|", failOn="]") + Suppress("|"),
-                default="",
-            ).setResultsName("name")
-            + Combine("http" + SkipTo("]")).setResultsName("url")
-            + "]",
-        ).setParseAction(self.action)
+        NAMED_LINK = SkipTo("|", failOn="]").setResultsName("name") + "|" + SkipTo("]").setResultsName("url")
+        LINK = Combine("http" + SkipTo("]")).setResultsName("url")
+        return Combine("[" + (LINK ^ NAMED_LINK) + "]").setParseAction(self.action)
 
 
 class Attachment:
