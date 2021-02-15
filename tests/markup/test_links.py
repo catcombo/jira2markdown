@@ -3,6 +3,7 @@ from jira2markdown.parser import convert
 
 def test_mailto():
     assert convert("[mailto:service@atlassian.com]") == "<service@atlassian.com>"
+    assert convert("[service@atlassian.com|mailto:service@atlassian.com]") == "<service@atlassian.com>"
 
 
 def test_link():
