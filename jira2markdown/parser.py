@@ -9,7 +9,8 @@ from jira2markdown.markup.links import Attachment, Link, MailTo, Mention
 from jira2markdown.markup.lists import OrderedList, UnorderedList
 from jira2markdown.markup.tables import Table
 from jira2markdown.markup.text_breaks import LineBreak, Mdash, Ndash, Ruler
-from jira2markdown.markup.text_effects import BlockQuote, Bold, Color, EscSpecialChars, Monospaced, Quote, Strikethrough
+from jira2markdown.markup.text_effects import BlockQuote, Bold, Color, EscSpecialChars, Monospaced, Quote, \
+    Strikethrough, Underline
 
 ParserElement.setDefaultWhitespaceChars(" \t")
 
@@ -37,6 +38,7 @@ def convert(text: str, usernames: Optional[dict] = None) -> str:
         Mdash().expr | \
         Ruler().expr | \
         Strikethrough(markup).expr | \
+        Underline(markup).expr | \
         Color(markup).expr | \
         LineBreak().expr | \
         EscSpecialChars().expr
