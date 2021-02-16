@@ -44,6 +44,25 @@ class Strikethrough:
         ).setParseAction(self.action) + WordEnd()
 
 
+class Underline:
+    def __init__(self, markup: Forward):
+        self.markup = markup
+
+    def action(self, tokens: ParseResults) -> str:
+        return self.markup.transformString(tokens[0])
+
+    @property
+    def expr(self) -> ParserElement:
+        TAG = Suppress("+")
+        IGNORE = White() + TAG | Color(self.markup).expr
+        return WordStart() + Combine(
+            TAG
+            + ~White()
+            + SkipTo(TAG, ignore=IGNORE, failOn="\n")
+            + TAG,
+        ).setParseAction(self.action) + WordEnd()
+
+
 class Color:
     def __init__(self, markup: Forward):
         self.markup = markup

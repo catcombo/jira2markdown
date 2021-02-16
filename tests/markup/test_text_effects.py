@@ -22,7 +22,16 @@ def test_strikethrough():
     assert convert("must-word- start") == "must-word- start"
     assert convert("must -word-end") == "must -word-end"
     assert convert("no - space after start-") == "no - space after start-"
-    assert convert("-skip -spaced -char-") == "~~skip -spaced -char~~"
+    assert convert("-skip -spaced - char-") == "~~skip -spaced - char~~"
+
+
+def test_underline():
+    assert convert("+underline+") == "underline"
+    assert convert("+multiline\nunderline+") == "+multiline\nunderline+"
+    assert convert("must+word+ start") == "must+word+ start"
+    assert convert("must +word+end") == "must +word+end"
+    assert convert("no + space after start+") == "no + space after start+"
+    assert convert("+skip +spaced + char+") == "skip +spaced + char"
 
 
 def test_color():
