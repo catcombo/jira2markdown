@@ -1,4 +1,4 @@
-from pyparsing import Keyword, ParseResults, ParserElement, WordEnd, WordStart, replaceWith
+from pyparsing import Keyword, LineEnd, ParserElement, StringStart, WordEnd, WordStart, replaceWith
 
 
 class LineBreak:
@@ -24,11 +24,8 @@ class Mdash:
 
 
 class Ruler:
-    def action(self, tokens: ParseResults) -> str:
-        return "\n----\n"
-
     @property
     def expr(self) -> ParserElement:
-        return WordStart() + \
-            Keyword("----", identChars="-").setParseAction(self.action) + \
-            WordEnd()
+        return ("\n" | StringStart() | LineBreak().expr) \
+            + Keyword("----", identChars="-").setParseAction(replaceWith("\n----")) \
+            + LineEnd()
