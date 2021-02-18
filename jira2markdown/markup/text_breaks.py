@@ -10,17 +10,17 @@ class LineBreak:
 class Ndash:
     @property
     def expr(self) -> ParserElement:
-        return WordStart() + \
-            Keyword("--", identChars="-").setParseAction(replaceWith("–")) + \
-            WordEnd()
+        return WordStart() \
+            + Keyword("--", identChars="-").setParseAction(replaceWith("–")) \
+            + WordEnd()
 
 
 class Mdash:
     @property
     def expr(self) -> ParserElement:
-        return WordStart() + \
-            Keyword("---", identChars="-").setParseAction(replaceWith("—")) + \
-            WordEnd()
+        return WordStart() \
+            + Keyword("---", identChars="-").setParseAction(replaceWith("—")) \
+            + WordEnd()
 
 
 class Ruler:
