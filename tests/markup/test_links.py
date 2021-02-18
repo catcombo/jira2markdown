@@ -1,31 +1,43 @@
 from jira2markdown.parser import convert
 
 
-def test_mailto():
-    assert convert("[mailto:service@atlassian.com]") == "<service@atlassian.com>"
-    assert convert("[service@atlassian.com|mailto:service@atlassian.com]") == "<service@atlassian.com>"
+class TestMailTo:
+    def test_basic_conversion(self):
+        assert convert("[mailto:service@atlassian.com]") == "<service@atlassian.com>"
+
+    def test_alias(self):
+        assert convert("[Some text|mailto:service@atlassian.com]") == "<service@atlassian.com>"
 
 
-def test_link():
-    assert convert("[http://jira.atlassian.com]") == "<http://jira.atlassian.com>"
-    assert convert("[Atlassian|http://atlassian.com]") == "[Atlassian](http://atlassian.com)"
-    assert convert("[Text in square brackets]") == "[Text in square brackets]"
+class TestLink:
+    def test_basic_conversion(self):
+        assert convert("[http://jira.atlassian.com]") == "<http://jira.atlassian.com>"
+
+    def test_alias(self):
+        assert convert("[Atlassian|http://atlassian.com]") == "[Atlassian](http://atlassian.com)"
+
+    def test_exceptions(self):
+        assert convert("[Text in square brackets]") == "[Text in square brackets]"
 
 
-def test_attachment():
-    assert convert("[^attachment.ext]") == "[attachment.ext](attachment.ext)"
+class TestAttachment:
+    def test_basic_conversion(self):
+        assert convert("[^attachment.ext]") == "[attachment.ext](attachment.ext)"
 
 
-def test_mention():
-    usernames = {
-        "1984:big-brother-101-love": "winston",
+class TestMention:
+    USERNAMES = {
+        "100:internal-id": "elliot",
     }
 
-    assert convert("[Firstname Lastname|~accountid:1984:big-brother-101-love]") == "@1984:big-brother-101-love"
-    assert convert("[Firstname Lastname|~accountid:1984:big-brother-101-love]", usernames) == "@winston"
+    def test_basic_conversion(self):
+        assert convert("[~100:internal-id]") == "@100:internal-id"
+        assert convert("[~100:internal-id]", self.USERNAMES) == "@elliot"
 
-    assert convert("[~accountId:1984:big-brother-101-love]") == "@1984:big-brother-101-love"
-    assert convert("[~accountid:1984:big-brother-101-love]", usernames) == "@winston"
+    def test_prefix(self):
+        assert convert("[~accountId:100:internal-id]") == "@100:internal-id"
+        assert convert("[~accountid:100:internal-id]", self.USERNAMES) == "@elliot"
 
-    assert convert("[~1984:big-brother-101-love]") == "@1984:big-brother-101-love"
-    assert convert("[~1984:big-brother-101-love]", usernames) == "@winston"
+    def test_alias(self):
+        assert convert("[Firstname Lastname|~accountid:100:internal-id]") == "@100:internal-id"
+        assert convert("[Firstname Lastname|~accountid:100:internal-id]", self.USERNAMES) == "@elliot"
