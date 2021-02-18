@@ -27,3 +27,251 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 })
 # >>> @winston woke up with the word 'Shakespeare' on his lips
 ```
+
+# Conversion tables
+
+## Headings
+
+| Jira | Markdown |
+|------|----------|
+|`h1. Biggest heading`|`# Biggest heading`|
+|`h2. Bigger heading`|`## Bigger heading`|
+|`h3. Big heading`|`### Big heading`|
+|`h4. Normal heading`|`#### Normal heading`|
+|`h5. Small heading`|`##### Small heading`|
+|`h6. Smallest heading`|`###### Smallest heading`|
+
+## Text Effects
+
+| Jira | Markdown |
+|------|----------|
+|`*strong*`|`**strong**`|
+|`_emphasis_`|Not converted (the same syntax)|
+|`??citation??`|Not converted|
+|`-deleted-`|`~~deleted~~`|
+|`+inserted+`|`inserted`|
+|`^superscript^`|Not converted|
+|`~subscript~`|Not converted|
+|`{{monospaced}}`|`` `monospaced` ``|
+|`bq. Some block quoted text`|`> Some block quoted text`|
+|`{quote}Content to be quoted{quote}`|`> Content to be quoted`|
+|`{color:red}red text!{color}`|`<font color="red">red text!<font>`|
+
+## Text Breaks
+
+| Jira | Markdown |
+|------|----------|
+|`\\`|Line break|
+|`---`|`—`|
+|`--`|`–`|
+
+## Links
+
+| Jira | Markdown |
+|------|----------|
+|`[#anchor]`|Not converted|
+|`[^attachment.ext]`|`[attachment.ext](attachment.ext)`|
+|`[http://www.example.com]`|`<http://www.example.com>`|
+|`[Example\|http://example.com]`|`[Example](http://example.com)`|
+|`[mailto:box@example.com]`|`<box@example.com>`|
+|`[file:///c:/temp/foo.txt]`|Not converted|
+|`{anchor:anchorname}`|Not converted|
+|`[~username]`|`@username`|
+
+## Lists
+
+<table>
+<tr>
+<th>Jira</th>
+<th>Markdown</th>
+</tr>
+<tr>
+<td>
+
+```
+* some
+* bullet
+** indented
+** bullets
+* points
+```
+</td>
+<td>
+
+```
+- some
+- bullet
+  - indented
+  - bullets
+- points
+```
+</td>
+</tr>
+<tr>
+<td>
+
+```
+# a
+# numbered
+# list
+```
+</td>
+<td>
+
+```
+1. a
+1. numbered
+1. list
+```
+</td>
+</tr>
+<tr>
+<td>
+
+```
+# a
+# numbered
+#* with
+#* nested
+#* bullet
+# list
+```
+</td>
+<td>
+
+```
+1. a
+1. numbered
+   - with
+   - nested
+   - bullet
+1. list
+```
+</td>
+</tr>
+<tr>
+<td>
+
+```
+* a
+* bulleted
+*# with
+*# nested
+*# numbered
+* list
+```
+</td>
+<td>
+
+```
+- a
+- bulleted
+  1. with
+  1. nested
+  1. numbered
+- list
+```
+</td>
+</tr>
+</table>
+
+## Images
+
+| Jira | Markdown |
+|------|----------|
+|`!image.jpg!`|`![image.jpg](image.jpg)`|
+|`!image.jpg\|thumbnail!`|`![image.jpg](image.jpg)`|
+|`!image.jpg\|width=300,height=200!`|`![image.jpg](image.jpg){width=300}{height=200}`|
+
+Only `width` and `height` attributes are supported.
+
+## Tables
+
+<table>
+<tr>
+<th>Jira</th>
+<th>Markdown</th>
+</tr>
+<tr>
+<td>
+
+```
+||heading 1||heading 2||heading 3||
+|col A1|col A2|col A3|
+|col B1|col B2|col B3|
+
+```
+</td>
+<td>
+
+```
+|heading 1|heading 2|heading 3|
+|-|-|-|
+|col A1|col A2|col A3|
+|col B1|col B2|col B3|
+```
+</td>
+</tr>
+</table>
+
+## Advanced Formatting
+
+<table>
+<tr>
+<th>Jira</th>
+<th>Markdown</th>
+</tr>
+<tr>
+<td>
+
+```
+{noformat}
+preformatted piece of text
+ so *no* further _formatting_ is done here
+{noformat}
+```
+</td>
+<td>
+
+````
+```
+preformatted piece of text
+ so *no* further _formatting_ is done here
+```
+````
+</td>
+</tr>
+<tr>
+<td>
+
+```
+{panel}
+Some text
+{panel}
+```
+</td>
+<td>Not supported</td>
+</tr>
+<tr>
+<td>
+
+```
+{code:xml}
+    <test>
+        <another tag="attribute"/>
+    </test>
+{code}
+```
+</td>
+<td>
+
+````
+```xml
+    <test>
+        <another tag="attribute"/>
+    </test>
+```
+````
+</td>
+</tr>
+</table>
