@@ -1,4 +1,4 @@
-from pyparsing import Combine, LineStart, ParseResults, ParserElement, Word
+from pyparsing import Combine, ParseResults, ParserElement, StringStart, Word
 
 
 class Headings:
@@ -7,4 +7,5 @@ class Headings:
 
     @property
     def expr(self) -> ParserElement:
-        return LineStart() + Combine(Word("h", "123456", exact=2) + ". ").setParseAction(self.action)
+        return ("\n" | StringStart()) \
+            + Combine(Word("h", "123456", exact=2) + ". ").setParseAction(self.action)
