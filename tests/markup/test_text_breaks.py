@@ -1,21 +1,44 @@
 from jira2markdown.parser import convert
 
 
-def test_line_break():
-    assert convert("abc\\\\def") == "abc\ndef"
+class TestLineBreak:
+    def test_word_break(self):
+        assert convert("abc\\\\def") == "abc\ndef"
 
 
-def test_ndash():
-    assert convert("--") == "–"
-    assert convert("abc--def") == "abc--def"
-    assert convert("abc -- def") == "abc – def"
+class TestNdash:
+    def test_basic_conversion(self):
+        assert convert("--") == "–"
+        assert convert("abc -- def") == "abc – def"
+
+    def test_word_connections(self):
+        assert convert("abc--def") == "abc--def"
+        assert convert("abc --def") == "abc --def"
+        assert convert("abc-- def") == "abc-- def"
 
 
-def test_mdash():
-    assert convert("---") == "—"
-    assert convert("abc---def") == "abc---def"
-    assert convert("abc --- def") == "abc — def"
+class TestMdash:
+    def test_basic_conversion(self):
+        assert convert("---") == "—"
+        assert convert("abc --- def") == "abc — def"
+
+    def test_word_connections(self):
+        assert convert("abc---def") == "abc---def"
+        assert convert("abc ---def") == "abc ---def"
+        assert convert("abc--- def") == "abc--- def"
 
 
-def test_ruler():
-    assert convert(" ---- ") == " \n----\n "
+class TestRuler:
+    def test_basic_conversion(self):
+        assert convert("----") == "\n----"
+
+    def test_indent(self):
+        assert convert(" ---- ") == " \n----"
+
+    def test_word_connections(self):
+        assert convert("abc----def") == "abc----def"
+        assert convert("abc ----def") == "abc ----def"
+        assert convert("abc---- def") == "abc---- def"
+        assert convert("abc ---- def") == "abc ---- def"
+        assert convert("abc ---- ") == "abc ---- "
+        assert convert(" ---- def") == " ---- def"

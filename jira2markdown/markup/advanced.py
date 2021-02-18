@@ -13,7 +13,7 @@ class Noformat:
 
 class Code:
     def action(self, tokens: ParseResults) -> str:
-        lang = tokens.lang
+        lang = tokens.lang or "Java"
         text = tokens.text.strip("\n")
         return f"```{lang}\n{text}\n```"
 

@@ -1,8 +1,9 @@
 from jira2markdown.parser import convert
 
 
-def test_table():
-    assert convert("""
+class TestTable:
+    def test_basic_conversion(self):
+        assert convert("""
 ||header 1||header 2||header 3||
 |cell 1-1|cell 1-2|cell 1-3|
 |cell 2-1|cell 2-2|cell 2-3|
@@ -14,9 +15,8 @@ def test_table():
 |cell 2-1|cell 2-2|cell 2-3|
 """
 
-
-def test_mixed_column_separator():
-    assert convert("""
+    def test_mixed_column_separator(self):
+        assert convert("""
 |header 1||header 2|header 3|
 |cell 1-1|cell 1-2||cell 1-3|
 ||cell 2-1|cell 2-2|cell 2-3|
@@ -28,9 +28,8 @@ def test_mixed_column_separator():
 |cell 2-1|cell 2-2|cell 2-3|
 """
 
-
-def test_uneven_columns_count():
-    assert convert("""
+    def test_uneven_columns_count(self):
+        assert convert("""
 |header 1|header 2|
 |cell 1-1|cell 1-2|cell 1-3|
 |cell 2-1|
@@ -42,9 +41,8 @@ def test_uneven_columns_count():
 |cell 2-1|
 """
 
-
-def test_open_end_row():
-    assert convert("""
+    def test_open_end_row(self):
+        assert convert("""
 ||header 1||header 2||header 3
 |cell 1-1|cell 1-2
 |cell 2-1
@@ -56,9 +54,8 @@ def test_open_end_row():
 |cell 2-1|
 """
 
-
-def test_smallest_table():
-    assert convert("""
+    def test_smallest_table(self):
+        assert convert("""
 |header
 """) == """
 
@@ -66,9 +63,8 @@ def test_smallest_table():
 |-|
 """
 
-
-def test_multiline_text():
-    assert convert("""
+    def test_multiline_text(self):
+        assert convert("""
 |multi
 line 
 header|
@@ -86,9 +82,8 @@ row
 |open <br>end <br>row|
 """
 
-
-def test_sibling_text():
-    assert convert("""
+    def test_table_adjacent_text(self):
+        assert convert("""
 text before table
 ||header 1||header 2||
 |cell 1-1|cell 1-2|
@@ -103,9 +98,8 @@ text before table
 text after table
 """
 
-
-def test_empty_rows():
-    assert convert("""
+    def test_empty_rows(self):
+        assert convert("""
 |
 ||
 |text|

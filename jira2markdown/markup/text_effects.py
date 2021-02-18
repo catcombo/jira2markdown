@@ -1,8 +1,8 @@
-from pyparsing import CaselessLiteral, Char, Combine, Forward, LineEnd, LineStart, Literal, Optional, ParseResults, \
-    ParserElement, QuotedString, SkipTo, Suppress, White, Word, WordEnd, WordStart, alphanums, alphas, hexnums, nums, \
-    replaceWith
+from pyparsing import CaselessLiteral, Char, Combine, Forward, LineEnd, Literal, Optional, ParseResults, \
+    ParserElement, QuotedString, SkipTo, StringStart, Suppress, White, Word, WordEnd, WordStart, alphanums, alphas, \
+    hexnums, nums, replaceWith
 
-from jira2markdown.tokens import NotPrecededBy
+from jira2markdown.tokens import NotUnicodeAlphaNum
 
 
 class Bold:
@@ -14,13 +14,13 @@ class Bold:
 
     @property
     def expr(self) -> ParserElement:
-        BOLD = Suppress("*")
-        IGNORE = White() + BOLD | Color(self.markup).expr
-        return NotPrecededBy(alphanums) + Combine(
-            BOLD
-            + (~White() & ~BOLD)
-            + SkipTo(BOLD, ignore=IGNORE, failOn=LineEnd())
-            + BOLD
+        TOKEN = Suppress("*")
+        IGNORE = White() + TOKEN | Color(self.markup).expr
+        return NotUnicodeAlphaNum() + Combine(
+            TOKEN
+            + (~White() & ~TOKEN)
+            + SkipTo(TOKEN, ignore=IGNORE, failOn=LineEnd())
+            + TOKEN
             + ~Char(alphanums),
         ).setParseAction(self.action)
 
@@ -34,13 +34,13 @@ class Strikethrough:
 
     @property
     def expr(self) -> ParserElement:
-        STRIKE = Suppress("-")
-        IGNORE = White() + STRIKE | Color(self.markup).expr
+        TOKEN = Suppress("-")
+        IGNORE = White() + TOKEN | Color(self.markup).expr
         return WordStart() + Combine(
-            STRIKE
+            TOKEN
             + ~White()
-            + SkipTo(STRIKE, ignore=IGNORE)
-            + STRIKE,
+            + SkipTo(TOKEN, ignore=IGNORE, failOn="\n")
+            + TOKEN,
         ).setParseAction(self.action) + WordEnd()
 
 
@@ -53,13 +53,13 @@ class Underline:
 
     @property
     def expr(self) -> ParserElement:
-        TAG = Suppress("+")
-        IGNORE = White() + TAG | Color(self.markup).expr
+        TOKEN = Suppress("+")
+        IGNORE = White() + TOKEN | Color(self.markup).expr
         return WordStart() + Combine(
-            TAG
+            TOKEN
             + ~White()
-            + SkipTo(TAG, ignore=IGNORE, failOn="\n")
-            + TAG,
+            + SkipTo(TOKEN, ignore=IGNORE, failOn="\n")
+            + TOKEN,
         ).setParseAction(self.action) + WordEnd()
 
 
@@ -104,7 +104,7 @@ class Color:
 class Quote:
     @property
     def expr(self) -> ParserElement:
-        return LineStart() + Literal("bq. ").setParseAction(replaceWith("> "))
+        return ("\n" | StringStart()) + Literal("bq. ").setParseAction(replaceWith("> "))
 
 
 class BlockQuote:

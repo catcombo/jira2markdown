@@ -1,7 +1,6 @@
-from pyparsing import Combine, Optional, ParseResults, ParserElement, \
-    Word, alphanums, nums, printables
+from pyparsing import Combine, Optional, ParseResults, ParserElement, Word, nums, printables
 
-from jira2markdown.tokens import NotPrecededBy
+from jira2markdown.tokens import NotUnicodeAlphaNum
 
 
 class Image:
@@ -15,7 +14,7 @@ class Image:
 
     @property
     def expr(self) -> ParserElement:
-        return NotPrecededBy(alphanums) + Combine(
+        return NotUnicodeAlphaNum() + Combine(
             "!"
             + Word(printables + " ", min=3, excludeChars="|!").setResultsName("url")
             + Optional(

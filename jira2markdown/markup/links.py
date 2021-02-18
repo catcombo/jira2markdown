@@ -24,20 +24,20 @@ class Link:
         self.markup = markup
 
     def action(self, tokens: ParseResults) -> str:
-        name = getattr(tokens, "name", "")
+        alias = getattr(tokens, "alias", "")
         url = tokens.url
 
-        if len(name) > 0:
-            name = self.markup.transformString(name)
-            return f"[{name}]({url})"
+        if len(alias) > 0:
+            alias = self.markup.transformString(alias)
+            return f"[{alias}]({url})"
         else:
             return f"<{url}>"
 
     @property
     def expr(self) -> ParserElement:
-        NAMED_LINK = SkipTo("|", failOn="]").setResultsName("name") + "|" + SkipTo("]").setResultsName("url")
+        ALIAS_LINK = SkipTo("|", failOn="]").setResultsName("alias") + "|" + SkipTo("]").setResultsName("url")
         LINK = Combine("http" + SkipTo("]")).setResultsName("url")
-        return Combine("[" + (LINK ^ NAMED_LINK) + "]").setParseAction(self.action)
+        return Combine("[" + (LINK ^ ALIAS_LINK) + "]").setParseAction(self.action)
 
 
 class Attachment:
