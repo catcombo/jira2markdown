@@ -2,7 +2,7 @@ from pyparsing import CaselessLiteral, Char, Combine, Forward, LineEnd, LineStar
     ParserElement, QuotedString, SkipTo, Suppress, White, Word, WordEnd, WordStart, alphanums, alphas, hexnums, nums, \
     replaceWith
 
-from jira2markdown.tokens import NotPrecededBy
+from jira2markdown.tokens import NotUnicodeAlphaNum
 
 
 class Bold:
@@ -14,13 +14,13 @@ class Bold:
 
     @property
     def expr(self) -> ParserElement:
-        BOLD = Suppress("*")
-        IGNORE = White() + BOLD | Color(self.markup).expr
-        return NotPrecededBy(alphanums) + Combine(
-            BOLD
-            + (~White() & ~BOLD)
-            + SkipTo(BOLD, ignore=IGNORE, failOn=LineEnd())
-            + BOLD
+        TOKEN = Suppress("*")
+        IGNORE = White() + TOKEN | Color(self.markup).expr
+        return NotUnicodeAlphaNum() + Combine(
+            TOKEN
+            + (~White() & ~TOKEN)
+            + SkipTo(TOKEN, ignore=IGNORE, failOn=LineEnd())
+            + TOKEN
             + ~Char(alphanums),
         ).setParseAction(self.action)
 
