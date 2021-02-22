@@ -177,13 +177,28 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 
 ## Images
 
-| Jira | Markdown |
-|------|----------|
-|`!image.jpg!`|`![image.jpg](image.jpg)`|
-|`!image.jpg\|thumbnail!`|`![image.jpg](image.jpg)`|
-|`!image.jpg\|width=300,height=200!`|`![image.jpg](image.jpg){width=300}{height=200}`|
+<table>
+<tr>
+<th>Jira</th>
+<th>Markdown</th>
+</tr>
+<tr>
+<td>
 
-Only `width` and `height` attributes are supported.
+```
+!image.jpg!
+!image.jpg|thumbnail!
+!image.gif|align=right, vspace=4!
+```
+</td>
+<td>
+
+```
+![image.jpg](image.jpg)
+```
+</td>
+</tr>
+</table>
 
 ## Tables
 

@@ -32,7 +32,7 @@ class TestTableContent:
             '\n\n|Table **bold header** and <font color="red">colored title</font>|\n|-|\n\n'
 
     def test_cell_image(self):
-        assert convert("|!image.png|width=300!") == "\n\n|![image.png](image.png){width=300}|\n|-|\n\n"
+        assert convert("|!image.png|width=300!") == "\n\n|![image.png](image.png)|\n|-|\n\n"
 
     def test_cell_link(self):
         assert convert("|[link|http://example.com]|") == "\n\n|[link](http://example.com)|\n|-|\n\n"
