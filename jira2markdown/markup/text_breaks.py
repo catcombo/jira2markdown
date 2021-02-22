@@ -26,6 +26,8 @@ class Mdash:
 class Ruler:
     @property
     def expr(self) -> ParserElement:
+        # Text with dashed below it turns into a heading. To prevent this
+        # add a line break before the dashes.
         return ("\n" | StringStart() | LineBreak().expr) \
             + Keyword("----", identChars="-").setParseAction(replaceWith("\n----")) \
             + LineEnd()
