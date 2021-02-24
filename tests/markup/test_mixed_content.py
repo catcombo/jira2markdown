@@ -25,6 +25,12 @@ class TestRecursiveContent:
         assert convert("+text {color:blue}contains+ token{color} outside+") == \
                'text <font color="blue">contains+ token</font> outside'
 
+    def test_inlinequote_color_inlinequote(self):
+        assert convert("??text {color:blue}??text inside??{color} outside??") == \
+               '<q>text <font color="blue"><q>text inside</q></font> outside</q>'
+        assert convert("??text {color:blue}contains?? token{color} outside??") == \
+               '<q>text <font color="blue">contains?? token</font> outside</q>'
+
 
 class TestTableContent:
     def test_basic_markup(self):

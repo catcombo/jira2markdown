@@ -47,7 +47,7 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 |------|----------|
 |`*strong*`|`**strong**`|
 |`_emphasis_`|Not converted (the same syntax)|
-|`??citation??`|Not converted|
+|`??citation??`|`<q>citation</q>`|
 |`-deleted-`|`~~deleted~~`|
 |`+inserted+`|`inserted`|
 |`^superscript^`|Not converted|

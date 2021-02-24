@@ -63,6 +63,25 @@ class Underline:
         ).setParseAction(self.action) + WordEnd()
 
 
+class InlineQuote:
+    def __init__(self, markup: Forward):
+        self.markup = markup
+
+    def action(self, tokens: ParseResults) -> str:
+        return "<q>" + self.markup.transformString(tokens[0]) + "</q>"
+
+    @property
+    def expr(self) -> ParserElement:
+        TOKEN = Suppress("??")
+        IGNORE = White() + TOKEN | Color(self.markup).expr
+        return WordStart() + Combine(
+            TOKEN
+            + ~White()
+            + SkipTo(TOKEN, ignore=IGNORE, failOn="\n")
+            + TOKEN,
+        ).setParseAction(self.action) + WordEnd()
+
+
 class Color:
     def __init__(self, markup: Forward):
         self.markup = markup

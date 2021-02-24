@@ -83,6 +83,30 @@ class TestUnderline:
         assert convert("single +char") == "single +char"
 
 
+class TestInlineQuote:
+    def test_basic_conversion(self):
+        assert convert("inside ??some long?? text") == "inside <q>some long</q> text"
+
+    def test_line_endings(self):
+        assert convert("??start string end??") == "<q>start string end</q>"
+        assert convert("\n??start line end??\n") == "\n<q>start line end</q>\n"
+
+    def test_match_start_conditions(self):
+        assert convert("no ?? space after start??") == "no ?? space after start??"
+        assert convert("word??connector?? markup") == "word??connector?? markup"
+
+    def test_match_end_conditions(self):
+        assert convert("??underline ??") == "??underline ??"
+        assert convert("??word??connector") == "??word??connector"
+        assert convert("??skip ??spacing ?? char??") == "<q>skip ??spacing ?? char</q>"
+
+    def test_multiline(self):
+        assert convert("??multiline\nunderline??") == "??multiline\nunderline??"
+
+    def test_single_token(self):
+        assert convert("single ??char") == "single ??char"
+
+
 class TestColor:
     def test_color_value(self):
         assert convert("start {color:#0077ff}hex color{color} text") == \
