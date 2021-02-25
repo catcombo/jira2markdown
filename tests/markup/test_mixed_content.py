@@ -41,6 +41,15 @@ class TestRecursiveContent:
         assert convert("^text [^attachment.ext] outside^") == \
                "<sup>text [attachment.ext](attachment.ext) outside</sup>"
 
+    def test_subscript_color(self):
+        assert convert("~text {color:blue}~text inside~{color} outside~") == \
+               '<sub>text <font color="blue"><sub>text inside</sub></font> outside</sub>'
+        assert convert("~text {color:blue}contains~ token{color} outside~") == \
+               '<sub>text <font color="blue">contains~ token</font> outside</sub>'
+
+    def test_subscript_mention(self):
+        assert convert("~text [~username] outside~") == "<sub>text @username outside</sub>"
+
 
 class TestTableContent:
     def test_basic_markup(self):

@@ -48,7 +48,7 @@ class TestStrikethrough:
         assert convert("word-connector- markup") == "word-connector- markup"
 
     def test_match_end_conditions(self):
-        assert convert("-strikethrough -") == "-strikethrough -"
+        assert convert("-text -") == "-text -"
         assert convert("-word-connector") == "-word-connector"
         assert convert("-skip -spacing - chars-") == "~~skip -spacing - chars~~"
 
@@ -69,7 +69,7 @@ class TestUnderline:
         assert convert("word+connector+ markup") == "word+connector+ markup"
 
     def test_match_end_conditions(self):
-        assert convert("+underline +") == "+underline +"
+        assert convert("+text +") == "+text +"
         assert convert("+word+connector") == "+word+connector"
         assert convert("+skip +spacing + char+") == "skip +spacing + char"
 
@@ -90,7 +90,7 @@ class TestInlineQuote:
         assert convert("word??connector?? markup") == "word??connector?? markup"
 
     def test_match_end_conditions(self):
-        assert convert("??underline ??") == "??underline ??"
+        assert convert("??text ??") == "??text ??"
         assert convert("??word??connector") == "??word??connector"
         assert convert("??skip ??spacing ?? char??") == "<q>skip ??spacing ?? char</q>"
 
@@ -111,12 +111,33 @@ class TestSuperscript:
         assert convert("word^connector^ markup") == "word^connector^ markup"
 
     def test_match_end_conditions(self):
-        assert convert("^underline ^") == "^underline ^"
+        assert convert("^text ^") == "^text ^"
         assert convert("^word^connector") == "^word^connector"
         assert convert("^skip ^spacing ^ char^") == "<sup>skip ^spacing ^ char</sup>"
 
     def test_multiline(self):
         assert convert("^multiline\nunderline^") == "^multiline\nunderline^"
+
+
+class TestSubscript:
+    def test_basic_conversion(self):
+        assert convert("inside ~some long~ text") == "inside <sub>some long</sub> text"
+
+    def test_line_endings(self):
+        assert convert("~start string end~") == "<sub>start string end</sub>"
+        assert convert("\n~start line end~\n") == "\n<sub>start line end</sub>\n"
+
+    def test_match_start_conditions(self):
+        assert convert("no ~ space after start~") == "no ~ space after start~"
+        assert convert("word~connector~ markup") == "word~connector~ markup"
+
+    def test_match_end_conditions(self):
+        assert convert("~text ~") == "~text ~"
+        assert convert("~word~connector") == "~word~connector"
+        assert convert("~skip ~spacing ~ char~") == "<sub>skip ~spacing ~ char</sub>"
+
+    def test_multiline(self):
+        assert convert("~multiline\nunderline~") == "~multiline\nunderline~"
 
 
 class TestColor:

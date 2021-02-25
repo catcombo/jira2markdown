@@ -51,7 +51,7 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 |`-deleted-`|`~~deleted~~`|
 |`+inserted+`|`inserted`|
 |`^superscript^`|`<sup>superscript</sup>`|
-|`~subscript~`|Not converted|
+|`~subscript~`|`<sub>subscript</sub>`|
 |`{{monospaced}}`|`` `monospaced` ``|
 |`bq. Some block quoted text`|`> Some block quoted text`|
 |`{quote}Content to be quoted{quote}`|`> Content to be quoted`|

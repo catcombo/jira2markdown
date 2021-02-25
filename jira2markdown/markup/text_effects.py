@@ -2,7 +2,7 @@ from pyparsing import CaselessLiteral, Char, Combine, Forward, LineEnd, Literal,
     ParserElement, QuotedString, SkipTo, StringStart, Suppress, White, Word, WordEnd, WordStart, alphanums, alphas, \
     hexnums, nums, replaceWith
 
-from jira2markdown.markup.links import Attachment
+from jira2markdown.markup.links import Attachment, Mention
 from jira2markdown.tokens import NotUnicodeAlphaNum
 
 
@@ -94,6 +94,25 @@ class Superscript:
     def expr(self) -> ParserElement:
         TOKEN = Suppress("^")
         IGNORE = White() + TOKEN | Color(self.markup).expr | Attachment().expr
+        return WordStart() + Combine(
+            TOKEN
+            + ~White()
+            + SkipTo(TOKEN, ignore=IGNORE, failOn="\n")
+            + TOKEN,
+        ).setParseAction(self.action) + WordEnd()
+
+
+class Subscript:
+    def __init__(self, markup: Forward):
+        self.markup = markup
+
+    def action(self, tokens: ParseResults) -> str:
+        return "<sub>" + self.markup.transformString(tokens[0]) + "</sub>"
+
+    @property
+    def expr(self) -> ParserElement:
+        TOKEN = Suppress("~")
+        IGNORE = White() + TOKEN | Color(self.markup).expr | Mention({}).expr
         return WordStart() + Combine(
             TOKEN
             + ~White()
