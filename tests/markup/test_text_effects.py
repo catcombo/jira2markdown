@@ -55,9 +55,6 @@ class TestStrikethrough:
     def test_multiline(self):
         assert convert("-multiline\nstrikethrough-") == "-multiline\nstrikethrough-"
 
-    def test_single_token(self):
-        assert convert("single -char") == "single -char"
-
 
 class TestUnderline:
     def test_basic_conversion(self):
@@ -78,9 +75,6 @@ class TestUnderline:
 
     def test_multiline(self):
         assert convert("+multiline\nunderline+") == "+multiline\nunderline+"
-
-    def test_single_token(self):
-        assert convert("single +char") == "single +char"
 
 
 class TestInlineQuote:
@@ -103,8 +97,26 @@ class TestInlineQuote:
     def test_multiline(self):
         assert convert("??multiline\nunderline??") == "??multiline\nunderline??"
 
-    def test_single_token(self):
-        assert convert("single ??char") == "single ??char"
+
+class TestSuperscript:
+    def test_basic_conversion(self):
+        assert convert("inside ^some long^ text") == "inside <sup>some long</sup> text"
+
+    def test_line_endings(self):
+        assert convert("^start string end^") == "<sup>start string end</sup>"
+        assert convert("\n^start line end^\n") == "\n<sup>start line end</sup>\n"
+
+    def test_match_start_conditions(self):
+        assert convert("no ^ space after start^") == "no ^ space after start^"
+        assert convert("word^connector^ markup") == "word^connector^ markup"
+
+    def test_match_end_conditions(self):
+        assert convert("^underline ^") == "^underline ^"
+        assert convert("^word^connector") == "^word^connector"
+        assert convert("^skip ^spacing ^ char^") == "<sup>skip ^spacing ^ char</sup>"
+
+    def test_multiline(self):
+        assert convert("^multiline\nunderline^") == "^multiline\nunderline^"
 
 
 class TestColor:

@@ -7,29 +7,39 @@ class TestLineBreakIndent:
 
 
 class TestRecursiveContent:
-    def test_bold_color_bold(self):
+    def test_bold_color(self):
         assert convert("*text {color:red}*text inside*{color} outside*") == \
                '**text <font color="red">**text inside**</font> outside**'
         assert convert("*text {color:red}contains* token{color} outside*") == \
                r'**text <font color="red">contains\* token</font> outside**'
 
-    def test_strikethrough_color_strikethrough(self):
+    def test_strikethrough_color(self):
         assert convert("-text {color:green}-text inside-{color} outside-") == \
                '~~text <font color="green">~~text inside~~</font> outside~~'
         assert convert("-text {color:green}contains- token{color} outside-") == \
                '~~text <font color="green">contains- token</font> outside~~'
 
-    def test_underline_color_underline(self):
+    def test_underline_color(self):
         assert convert("+text {color:blue}+text inside+{color} outside+") == \
                'text <font color="blue">text inside</font> outside'
         assert convert("+text {color:blue}contains+ token{color} outside+") == \
                'text <font color="blue">contains+ token</font> outside'
 
-    def test_inlinequote_color_inlinequote(self):
+    def test_inlinequote_color(self):
         assert convert("??text {color:blue}??text inside??{color} outside??") == \
                '<q>text <font color="blue"><q>text inside</q></font> outside</q>'
         assert convert("??text {color:blue}contains?? token{color} outside??") == \
                '<q>text <font color="blue">contains?? token</font> outside</q>'
+
+    def test_superscript_color(self):
+        assert convert("^text {color:blue}^text inside^{color} outside^") == \
+               '<sup>text <font color="blue"><sup>text inside</sup></font> outside</sup>'
+        assert convert("^text {color:blue}contains^ token{color} outside^") == \
+               '<sup>text <font color="blue">contains^ token</font> outside</sup>'
+
+    def test_superscript_attachment(self):
+        assert convert("^text [^attachment.ext] outside^") == \
+               "<sup>text [attachment.ext](attachment.ext) outside</sup>"
 
 
 class TestTableContent:
