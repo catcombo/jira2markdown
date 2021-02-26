@@ -41,3 +41,6 @@ class TestMention:
     def test_alias(self):
         assert convert("[Firstname Lastname|~accountid:100:internal-id]") == "@100:internal-id"
         assert convert("[Firstname Lastname|~accountid:100:internal-id]", self.USERNAMES) == "@elliot"
+
+    def test_start_spacing(self):
+        assert convert("[~userA][~userB] [~userC]\t[~userD]\n[~userE]") == "@userA @userB @userC\t@userD\n@userE"

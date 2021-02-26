@@ -1,5 +1,5 @@
-from pyparsing import CaselessLiteral, Combine, Forward, Optional, ParseResults, ParserElement, SkipTo, Suppress,\
-    Word, alphanums
+from pyparsing import CaselessLiteral, Combine, Forward, Optional, ParseResults, ParserElement, PrecededBy, SkipTo, \
+    StringStart, Suppress, White, Word, alphanums
 
 
 class MailTo:
@@ -59,7 +59,7 @@ class Mention:
 
     @property
     def expr(self) -> ParserElement:
-        return Combine(
+        return (StringStart() | Optional(PrecededBy(White(), retreat=1), default=" ")) + Combine(
             "["
             + Optional(
                 SkipTo("|", failOn="]") + Suppress("|"),
