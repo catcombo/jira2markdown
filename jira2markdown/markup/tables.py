@@ -1,7 +1,6 @@
 from pyparsing import Forward, Group, LineEnd, LineStart, Literal, OneOrMore, Optional, ParseResults, ParserElement, \
     SkipTo, StringEnd, ZeroOrMore
 
-from jira2markdown.expressions import StepBack
 from jira2markdown.markup.images import Image
 from jira2markdown.markup.links import Link, MailTo, Mention
 
@@ -39,10 +38,10 @@ class Table:
         NL = LineEnd().suppress()
         SEP = (Literal("||") | Literal("|")).suppress()
         ROW_BREAK = NL + SEP | NL + NL | StringEnd()
-        IGNORE = StepBack([Link(self.markup).expr, MailTo().expr, Image().expr, Mention({}).expr])
+        IGNORE = Link(self.markup).expr | MailTo().expr | Image().expr | Mention({}).expr
 
         ROW = SEP + ZeroOrMore(
-            SkipTo(SEP, ignore=IGNORE, failOn=ROW_BREAK) + Optional(SEP),
+            SkipTo(SEP | ROW_BREAK, ignore=IGNORE) + Optional(SEP),
             stopOn=ROW_BREAK | NL + ~SEP,
         )
 
