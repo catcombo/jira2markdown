@@ -1,9 +1,10 @@
+import re
+
 from pyparsing import CaselessLiteral, Char, Combine, Forward, LineEnd, Literal, Optional, ParseResults, \
-    ParserElement, QuotedString, SkipTo, StringStart, Suppress, White, Word, WordEnd, WordStart, alphanums, alphas, \
-    hexnums, nums, replaceWith
+    ParserElement, PrecededBy, QuotedString, Regex, SkipTo, StringStart, Suppress, White, Word, WordEnd, WordStart, \
+    alphanums, alphas, hexnums, nums, replaceWith
 
 from jira2markdown.markup.links import Attachment, Mention
-from jira2markdown.tokens import NotUnicodeAlphaNum
 
 
 class Bold:
@@ -17,7 +18,7 @@ class Bold:
     def expr(self) -> ParserElement:
         TOKEN = Suppress("*")
         IGNORE = White() + TOKEN | Color(self.markup).expr
-        return NotUnicodeAlphaNum() + Combine(
+        return (StringStart() | PrecededBy(Regex(r"\W", flags=re.UNICODE), retreat=1)) + Combine(
             TOKEN
             + (~White() & ~TOKEN)
             + SkipTo(TOKEN, ignore=IGNORE, failOn=LineEnd())
