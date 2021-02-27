@@ -1,4 +1,6 @@
-from pyparsing import CaselessLiteral, Combine, FollowedBy, Forward, Optional, ParseResults, ParserElement, \
+from string import punctuation
+
+from pyparsing import CaselessLiteral, Char, Combine, FollowedBy, Forward, Optional, ParseResults, ParserElement, \
     PrecededBy, SkipTo, StringEnd, StringStart, Suppress, White, Word, alphanums
 
 
@@ -72,4 +74,5 @@ class Mention:
         )
         return (StringStart() | Optional(PrecededBy(White(), retreat=1), default=" ")) \
             + MENTION.setParseAction(self.action) \
-            + (StringEnd() | Optional(FollowedBy(White() | MENTION), default=" "))
+            + (StringEnd()
+               | Optional(FollowedBy(White() | Char(punctuation, excludeChars="[") | MENTION), default=" "))

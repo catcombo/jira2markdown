@@ -49,3 +49,8 @@ class TestMention:
         assert convert("[~userA] [~userB]") == "@userA @userB"
         assert convert("[~userA]\t[~userB]") == "@userA\t@userB"
         assert convert("[~userA]\n[~userB]") == "@userA\n@userB"
+
+    def test_punctuation(self):
+        assert convert("[~userA].") == "@userA."
+        assert convert("[~userA]:") == "@userA:"
+        assert convert("[~userA]?") == "@userA?"
