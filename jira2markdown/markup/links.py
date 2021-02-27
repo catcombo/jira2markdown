@@ -1,5 +1,5 @@
-from pyparsing import CaselessLiteral, Combine, Forward, Optional, ParseResults, ParserElement, PrecededBy, SkipTo, \
-    StringStart, Suppress, White, Word, alphanums
+from pyparsing import CaselessLiteral, Combine, FollowedBy, Forward, Optional, ParseResults, ParserElement, \
+    PrecededBy, SkipTo, StringEnd, StringStart, Suppress, White, Word, alphanums
 
 
 class MailTo:
@@ -59,7 +59,7 @@ class Mention:
 
     @property
     def expr(self) -> ParserElement:
-        return (StringStart() | Optional(PrecededBy(White(), retreat=1), default=" ")) + Combine(
+        MENTION = Combine(
             "["
             + Optional(
                 SkipTo("|", failOn="]") + Suppress("|"),
@@ -69,4 +69,7 @@ class Mention:
             + Optional(CaselessLiteral("accountid:"))
             + Word(alphanums + ":-").setResultsName("accountid")
             + "]",
-        ).setParseAction(self.action)
+        )
+        return (StringStart() | Optional(PrecededBy(White(), retreat=1), default=" ")) \
+            + MENTION.setParseAction(self.action) \
+            + (StringEnd() | Optional(FollowedBy(White() | MENTION), default=" "))
