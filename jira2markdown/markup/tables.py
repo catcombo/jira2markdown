@@ -1,5 +1,5 @@
-from pyparsing import Forward, Group, LineEnd, LineStart, Literal, OneOrMore, Optional, ParseResults, ParserElement, \
-    SkipTo, StringEnd, ZeroOrMore
+from pyparsing import Combine, Forward, Group, LineEnd, LineStart, Literal, OneOrMore, Optional, ParseResults, \
+    ParserElement, SkipTo, StringEnd, StringStart, White, ZeroOrMore
 
 from jira2markdown.markup.images import Image
 from jira2markdown.markup.links import Link, MailTo, Mention
@@ -31,7 +31,7 @@ class Table:
         # Insert header delimiter after the first row
         output.insert(1, "|" + "-|" * max(max_columns_count, 1))
 
-        return "\n" + "\n".join(output) + "\n"
+        return "\n".join(output) + "\n"
 
     @property
     def expr(self) -> ParserElement:
@@ -45,6 +45,7 @@ class Table:
             stopOn=ROW_BREAK | NL + ~SEP,
         )
 
-        return Optional(LineEnd(), default="\n") \
+        EMPTY_LINE = Combine("\n" + White(" \t", min=0) + "\n")
+        return ((StringStart() + Optional("\n")) ^ Optional(EMPTY_LINE, default="\n")) \
             + OneOrMore(LineStart() + Group(ROW) + NL).setParseAction(self.action) \
-            + Optional(LineEnd(), default="\n")
+            + (StringEnd() | Optional(LineEnd(), default="\n"))

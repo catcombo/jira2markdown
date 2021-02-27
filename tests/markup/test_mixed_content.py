@@ -54,17 +54,17 @@ class TestRecursiveContent:
 class TestTableContent:
     def test_basic_markup(self):
         assert convert("| Table *bold header* and {color:red}colored title{color} |") == \
-            '\n\n|Table **bold header** and <font color="red">colored title</font>|\n|-|\n\n'
+            '|Table **bold header** and <font color="red">colored title</font>|\n|-|\n'
 
     def test_cell_image(self):
-        assert convert("|!image.png|width=300!") == "\n\n|![image.png](image.png)|\n|-|\n\n"
+        assert convert("|!image.png|width=300!") == "|![image.png](image.png)|\n|-|\n"
 
     def test_cell_link(self):
-        assert convert("|[link|http://example.com]|") == "\n\n|[link](http://example.com)|\n|-|\n\n"
+        assert convert("|[link|http://example.com]|") == "|[link](http://example.com)|\n|-|\n"
 
     def test_cell_mailto(self):
-        assert convert("|[mailto:user@example.com]|") == "\n\n|<user@example.com>|\n|-|\n\n"
-        assert convert("|[alias|mailto:user@example.com]|") == "\n\n|<user@example.com>|\n|-|\n\n"
+        assert convert("|[mailto:user@example.com]|") == "|<user@example.com>|\n|-|\n"
+        assert convert("|[alias|mailto:user@example.com]|") == "|<user@example.com>|\n|-|\n"
 
     def test_cell_mention(self):
-        assert convert("|[user|~uuid]|", {"uuid": "elliot"}) == "\n\n|@elliot|\n|-|\n\n"
+        assert convert("|[user|~uuid]|", {"uuid": "elliot"}) == "|@elliot|\n|-|\n"
