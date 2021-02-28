@@ -68,3 +68,17 @@ class TestTableContent:
 
     def test_cell_mention(self):
         assert convert("|[user|~uuid]|", {"uuid": "elliot"}) == "|@elliot|\n|-|\n"
+
+
+class TestPanelContent:
+    def test_text_formatting(self):
+        assert convert("""
+{panel:title=My Title|borderStyle=dashed|borderColor=#ccc|titleBGColor=#F7D6C1|bgColor=#FFFFCE}
+a block of text surrounded with a *panel*
+line with !image.png|width=300!
+{panel}
+""") == """
+> **My Title**
+> a block of text surrounded with a **panel**
+> line with ![image.png](image.png)
+"""

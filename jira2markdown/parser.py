@@ -2,7 +2,7 @@ from typing import Optional
 
 from pyparsing import Forward, ParserElement
 
-from jira2markdown.markup.advanced import Code, Noformat
+from jira2markdown.markup.advanced import Code, Noformat, Panel
 from jira2markdown.markup.headings import Headings
 from jira2markdown.markup.images import Image
 from jira2markdown.markup.links import Attachment, Link, MailTo, Mention
@@ -33,6 +33,7 @@ def convert(text: str, usernames: Optional[dict] = None) -> str:
         Headings().expr | \
         Quote().expr | \
         BlockQuote(markup).expr | \
+        Panel(markup).expr | \
         Bold(markup).expr | \
         Ndash().expr | \
         Mdash().expr | \

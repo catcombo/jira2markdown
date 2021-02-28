@@ -260,12 +260,18 @@ preformatted piece of text
 <td>
 
 ```
-{panel}
-Some text
+{panel:title=My Title}
+Some text with a title
 {panel}
 ```
 </td>
-<td>Not supported</td>
+<td>
+
+```
+> **My Title**
+> Some text with a title
+```
+</td>
 </tr>
 <tr>
 <td>
