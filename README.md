@@ -47,15 +47,15 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 |------|----------|
 |`*strong*`|`**strong**`|
 |`_emphasis_`|Not converted (the same syntax)|
-|`??citation??`|Not converted|
+|`??citation??`|`<q>citation</q>`|
 |`-deleted-`|`~~deleted~~`|
 |`+inserted+`|`inserted`|
-|`^superscript^`|Not converted|
-|`~subscript~`|Not converted|
+|`^superscript^`|`<sup>superscript</sup>`|
+|`~subscript~`|`<sub>subscript</sub>`|
 |`{{monospaced}}`|`` `monospaced` ``|
 |`bq. Some block quoted text`|`> Some block quoted text`|
 |`{quote}Content to be quoted{quote}`|`> Content to be quoted`|
-|`{color:red}red text!{color}`|`<font color="red">red text!<font>`|
+|`{color:red}red text!{color}`|`<font color="red">red text!</font>`|
 
 ## Text Breaks
 
@@ -260,12 +260,18 @@ preformatted piece of text
 <td>
 
 ```
-{panel}
-Some text
+{panel:title=My Title}
+Some text with a title
 {panel}
 ```
 </td>
-<td>Not supported</td>
+<td>
+
+```
+> **My Title**
+> Some text with a title
+```
+</td>
 </tr>
 <tr>
 <td>

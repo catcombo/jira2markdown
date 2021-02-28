@@ -1,6 +1,7 @@
-from pyparsing import Combine, Optional, ParseResults, ParserElement, SkipTo, Word, printables
+import re
 
-from jira2markdown.tokens import NotUnicodeAlphaNum
+from pyparsing import Combine, Optional, ParseResults, ParserElement, PrecededBy, Regex, SkipTo, StringStart, Word, \
+    printables
 
 
 class Image:
@@ -9,7 +10,7 @@ class Image:
 
     @property
     def expr(self) -> ParserElement:
-        return NotUnicodeAlphaNum() + Combine(
+        return (StringStart() | PrecededBy(Regex(r"\W", flags=re.UNICODE), retreat=1)) + Combine(
             "!"
             + Word(printables + " ", min=3, excludeChars="|!").setResultsName("url")
             + Optional("|")

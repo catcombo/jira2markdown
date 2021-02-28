@@ -8,7 +8,6 @@ class TestTable:
 |cell 1-1|cell 1-2|cell 1-3|
 |cell 2-1|cell 2-2|cell 2-3|
 """) == """
-
 |header 1|header 2|header 3|
 |-|-|-|
 |cell 1-1|cell 1-2|cell 1-3|
@@ -21,7 +20,6 @@ class TestTable:
 |cell 1-1|cell 1-2||cell 1-3|
 ||cell 2-1|cell 2-2|cell 2-3|
 """) == """
-
 |header 1|header 2|header 3|
 |-|-|-|
 |cell 1-1|cell 1-2|cell 1-3|
@@ -34,7 +32,6 @@ class TestTable:
 |cell 1-1|cell 1-2|cell 1-3|
 |cell 2-1|
 """) == """
-
 |header 1|header 2||
 |-|-|-|
 |cell 1-1|cell 1-2|cell 1-3|
@@ -47,7 +44,6 @@ class TestTable:
 |cell 1-1|cell 1-2
 |cell 2-1
 """) == """
-
 |header 1|header 2|header 3|
 |-|-|-|
 |cell 1-1|cell 1-2|
@@ -55,13 +51,7 @@ class TestTable:
 """
 
     def test_smallest_table(self):
-        assert convert("""
-|header
-""") == """
-
-|header|
-|-|
-"""
+        assert convert("|header") == "|header|\n|-|\n"
 
     def test_multiline_text(self):
         assert convert("""
@@ -75,7 +65,6 @@ row|sibling row|
 end 
 row
 """) == """
-
 |multi<br>line <br>header||
 |-|-|
 |multi<br>line <br>row|sibling row|
@@ -106,8 +95,12 @@ text after table
 |
 |end|
 """) == """
-
 |text|
 |-|
 |end|
 """
+
+    def test_empty_start_lines(self):
+        assert convert("  \n|header") == "  \n|header|\n|-|\n"
+        assert convert("  \n \t \n|header") == "  \n \t \n|header|\n|-|\n"
+        assert convert("  \n text \n|header") == "  \n text \n\n|header|\n|-|\n"

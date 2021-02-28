@@ -41,3 +41,16 @@ class TestMention:
     def test_alias(self):
         assert convert("[Firstname Lastname|~accountid:100:internal-id]") == "@100:internal-id"
         assert convert("[Firstname Lastname|~accountid:100:internal-id]", self.USERNAMES) == "@elliot"
+
+    def test_spacing(self):
+        assert convert("text[~userA]") == "text @userA"
+        assert convert("[~userA]text") == "@userA text"
+        assert convert("[~userA][~userB]") == "@userA @userB"
+        assert convert("[~userA] [~userB]") == "@userA @userB"
+        assert convert("[~userA]\t[~userB]") == "@userA\t@userB"
+        assert convert("[~userA]\n[~userB]") == "@userA\n@userB"
+
+    def test_punctuation(self):
+        assert convert("[~userA].") == "@userA."
+        assert convert("[~userA]:") == "@userA:"
+        assert convert("[~userA]?") == "@userA?"

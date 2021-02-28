@@ -61,3 +61,36 @@ public String getFoo()
 }
 ```
 """
+
+
+class TestPanel:
+    def test_basic_conversion(self):
+        assert convert("""
+{panel}
+Some text
+{panel}
+""") == """
+> Some text
+"""
+
+    def test_title(self):
+        assert convert("""
+{panel:title=My Title}
+Some text with a title
+{panel}
+""") == """
+> **My Title**
+> Some text with a title
+"""
+
+    def test_multiple_parameters(self):
+        assert convert("""
+{panel:borderStyle=dashed|borderColor=#ccc|title=My Title|titleBGColor=#F7D6C1|bgColor=#FFFFCE}
+a block of text
+surrounded with a panel
+{panel}
+""") == """
+> **My Title**
+> a block of text
+> surrounded with a panel
+"""
