@@ -26,9 +26,8 @@ class TestBold:
     def test_single_token(self):
         assert convert("single *char") == r"single \*char"
 
-    def test_multi_surrounding_tokens(self):
-        assert convert("*bold**") == r"**bold**\*"
-        assert convert("**bold**") == r"\***bold**\*"
+    def test_adjacent_tokens(self):
+        assert convert("*bold**text*") == "**bold** **text**"
 
     def test_empty_text(self):
         assert convert("**") == r"\*\*"

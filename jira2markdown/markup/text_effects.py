@@ -1,7 +1,7 @@
 import re
 
 from pyparsing import CaselessLiteral, Char, Combine, LineEnd, Literal, Optional, ParseResults, ParserElement, \
-    PrecededBy, QuotedString, Regex, SkipTo, StringStart, Suppress, White, Word, WordEnd, WordStart, \
+    PrecededBy, QuotedString, Regex, SkipTo, StringEnd, StringStart, Suppress, White, Word, WordEnd, WordStart, \
     alphanums, alphas, hexnums, nums, replaceWith
 
 from jira2markdown.markup.base import AbstractMarkup
@@ -22,7 +22,7 @@ class Bold(AbstractMarkup):
             + SkipTo(TOKEN, ignore=IGNORE, failOn=LineEnd())
             + TOKEN
             + ~Char(alphanums),
-        ).setParseAction(self.action)
+        ).setParseAction(self.action) + (StringEnd() | Optional(~TOKEN, default=" "))
 
 
 class Strikethrough(AbstractMarkup):
