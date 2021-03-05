@@ -1,6 +1,22 @@
-# jira2markdown
+# Overview
 
 `jira2markdown` is a text converter from [JIRA markup](https://jira.atlassian.com/secure/WikiRendererHelpAction.jspa?section=all) to [YouTrack Markdown](https://www.jetbrains.com/help/youtrack/standalone/youtrack-markdown-syntax-issues.html) using parsing expression grammars. The Markdown implementation in YouTrack follows the [CommonMark specification](https://spec.commonmark.org/0.29/) with extensions. Thus, `jira2markdown` can be used to convert text to any Markdown syntax with minimal modifications.
+
+# Table of Contents
+
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+  * [Usage](#usage)
+  * [Conversion tables](#conversion-tables)
+    * [Headings](#headings)
+    * [Text Effects](#text-effects)
+    * [Text Breaks](#text-breaks)
+    * [Links](#links)
+    * [Lists](#lists)
+    * [Images](#images)
+    * [Tables](#tables)
+    * [Advanced Formatting](#advanced-formatting)
+  * [Customization](#customization)
 
 # Prerequisites
 
@@ -296,3 +312,39 @@ Some text with a title
 </td>
 </tr>
 </table>
+
+# Customization
+
+To customize the list of markup elements send it as an optional argument to `convert`:
+```python
+from jira2markdown import convert
+from jira2markdown.elements import MarkupElements
+from jira2markdown.markup.links import Link
+from jira2markdown.markup.text_effects import Bold
+
+# Only bold and link tokens will be converted here
+elements = MarkupElements([Link, Bold])
+convert("Some Jira text here", elements=elements)
+```
+
+Keep in mind that the order of markup elements is important! Elements are matching first from top to bottom in the list.
+
+To override some elements in the default element list use `insert_after`/`replace` methods:
+```python
+from jira2markdown import convert
+from jira2markdown.elements import MarkupElements
+from jira2markdown.markup.base import AbstractMarkup
+from jira2markdown.markup.links import Link
+from jira2markdown.markup.text_effects import Color
+
+class CustomColor(Color):
+    ...
+
+class MyElement(AbstractMarkup):
+    ...
+
+elements = MarkupElements()
+elements.replace(Color, CustomColor)
+elements.insert_after(Link, MyElement)
+convert("Some Jira text here", elements=elements)
+```

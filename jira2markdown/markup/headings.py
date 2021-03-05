@@ -1,7 +1,9 @@
 from pyparsing import Combine, ParseResults, ParserElement, StringStart, Word
 
+from jira2markdown.markup.base import AbstractMarkup
 
-class Headings:
+
+class Headings(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return "#" * int(tokens[0][1]) + " "
 

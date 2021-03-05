@@ -1,10 +1,12 @@
 from string import punctuation
 
-from pyparsing import CaselessLiteral, Char, Combine, FollowedBy, Forward, Optional, ParseResults, ParserElement, \
+from pyparsing import CaselessLiteral, Char, Combine, FollowedBy, Optional, ParseResults, ParserElement, \
     PrecededBy, SkipTo, StringEnd, StringStart, Suppress, White, Word, alphanums
 
+from jira2markdown.markup.base import AbstractMarkup
 
-class MailTo:
+
+class MailTo(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return f"<{tokens.email}>"
 
@@ -21,10 +23,7 @@ class MailTo:
         ).setParseAction(self.action)
 
 
-class Link:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class Link(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         alias = getattr(tokens, "alias", "")
         url = tokens.url
@@ -42,7 +41,7 @@ class Link:
         return Combine("[" + (LINK ^ ALIAS_LINK) + "]").setParseAction(self.action)
 
 
-class Attachment:
+class Attachment(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return f"[{tokens.filename}]({tokens.filename})"
 
@@ -51,10 +50,7 @@ class Attachment:
         return Combine("[^" + SkipTo("]").setResultsName("filename") + "]").setParseAction(self.action)
 
 
-class Mention:
-    def __init__(self, usernames: dict):
-        self.usernames = usernames
-
+class Mention(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         username = self.usernames.get(tokens.accountid)
         return f"@{tokens.accountid}" if username is None else f"@{username}"

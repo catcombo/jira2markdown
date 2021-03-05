@@ -1,23 +1,21 @@
 import re
 
-from pyparsing import CaselessLiteral, Char, Combine, Forward, LineEnd, Literal, Optional, ParseResults, \
-    ParserElement, PrecededBy, QuotedString, Regex, SkipTo, StringStart, Suppress, White, Word, WordEnd, WordStart, \
+from pyparsing import CaselessLiteral, Char, Combine, LineEnd, Literal, Optional, ParseResults, ParserElement, \
+    PrecededBy, QuotedString, Regex, SkipTo, StringStart, Suppress, White, Word, WordEnd, WordStart, \
     alphanums, alphas, hexnums, nums, replaceWith
 
+from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.links import Attachment, Mention
 
 
-class Bold:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class Bold(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return "**" + self.markup.transformString(tokens[0]) + "**"
 
     @property
     def expr(self) -> ParserElement:
         TOKEN = Suppress("*")
-        IGNORE = White() + TOKEN | Color(self.markup).expr
+        IGNORE = White() + TOKEN | Color(**self.init_kwargs).expr
         return (StringStart() | PrecededBy(Regex(r"\W", flags=re.UNICODE), retreat=1)) + Combine(
             TOKEN
             + (~White() & ~TOKEN)
@@ -27,17 +25,14 @@ class Bold:
         ).setParseAction(self.action)
 
 
-class Strikethrough:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class Strikethrough(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return "~~" + self.markup.transformString(tokens[0]) + "~~"
 
     @property
     def expr(self) -> ParserElement:
         TOKEN = Suppress("-")
-        IGNORE = White() + TOKEN | Color(self.markup).expr
+        IGNORE = White() + TOKEN | Color(**self.init_kwargs).expr
         return WordStart() + Combine(
             TOKEN
             + ~White()
@@ -46,17 +41,14 @@ class Strikethrough:
         ).setParseAction(self.action) + WordEnd()
 
 
-class Underline:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class Underline(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return self.markup.transformString(tokens[0])
 
     @property
     def expr(self) -> ParserElement:
         TOKEN = Suppress("+")
-        IGNORE = White() + TOKEN | Color(self.markup).expr
+        IGNORE = White() + TOKEN | Color(**self.init_kwargs).expr
         return WordStart() + Combine(
             TOKEN
             + ~White()
@@ -65,17 +57,14 @@ class Underline:
         ).setParseAction(self.action) + WordEnd()
 
 
-class InlineQuote:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class InlineQuote(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return "<q>" + self.markup.transformString(tokens[0]) + "</q>"
 
     @property
     def expr(self) -> ParserElement:
         TOKEN = Suppress("??")
-        IGNORE = White() + TOKEN | Color(self.markup).expr
+        IGNORE = White() + TOKEN | Color(**self.init_kwargs).expr
         return WordStart() + Combine(
             TOKEN
             + ~White()
@@ -84,17 +73,14 @@ class InlineQuote:
         ).setParseAction(self.action) + WordEnd()
 
 
-class Superscript:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class Superscript(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return "<sup>" + self.markup.transformString(tokens[0]) + "</sup>"
 
     @property
     def expr(self) -> ParserElement:
         TOKEN = Suppress("^")
-        IGNORE = White() + TOKEN | Color(self.markup).expr | Attachment().expr
+        IGNORE = White() + TOKEN | Color(**self.init_kwargs).expr | Attachment(**self.init_kwargs).expr
         return WordStart() + Combine(
             TOKEN
             + ~White()
@@ -103,17 +89,14 @@ class Superscript:
         ).setParseAction(self.action) + WordEnd()
 
 
-class Subscript:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class Subscript(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return "<sub>" + self.markup.transformString(tokens[0]) + "</sub>"
 
     @property
     def expr(self) -> ParserElement:
         TOKEN = Suppress("~")
-        IGNORE = White() + TOKEN | Color(self.markup).expr | Mention({}).expr
+        IGNORE = White() + TOKEN | Color(**self.init_kwargs).expr | Mention(**self.init_kwargs).expr
         return WordStart() + Combine(
             TOKEN
             + ~White()
@@ -122,10 +105,7 @@ class Subscript:
         ).setParseAction(self.action) + WordEnd()
 
 
-class Color:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class Color(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         text = self.markup.transformString(tokens.text)
 
@@ -160,16 +140,13 @@ class Color:
         return expr.setParseAction(self.action)
 
 
-class Quote:
+class Quote(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
         return ("\n" | StringStart()) + Literal("bq. ").setParseAction(replaceWith("> "))
 
 
-class BlockQuote:
-    def __init__(self, markup: Forward):
-        self.markup = markup
-
+class BlockQuote(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         text = self.markup.transformString(tokens[0].strip())
         return "\n".join([f"> {line.lstrip()}" for line in text.splitlines()])
@@ -179,7 +156,7 @@ class BlockQuote:
         return QuotedString("{quote}", multiline=True).setParseAction(self.action)
 
 
-class Monospaced:
+class Monospaced(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return f"`{tokens[0]}`"
 
@@ -188,7 +165,7 @@ class Monospaced:
         return QuotedString("{{", endQuoteChar="}}").setParseAction(self.action)
 
 
-class EscSpecialChars:
+class EscSpecialChars(AbstractMarkup):
     """
     Escapes '*' characters that are not a part of any expression grammar
     """
