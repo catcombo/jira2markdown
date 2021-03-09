@@ -7,6 +7,8 @@ from jira2markdown.markup.links import Link, MailTo, Mention
 
 
 class Table(AbstractMarkup):
+    IS_INLINE_ELEMENT = False
+
     def action(self, tokens: ParseResults) -> str:
         lines = [line for line in tokens if len(line) > 0]
         max_columns_count = max(len(row) for row in tokens)

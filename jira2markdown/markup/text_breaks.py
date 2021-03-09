@@ -26,6 +26,8 @@ class Mdash(AbstractMarkup):
 
 
 class Ruler(AbstractMarkup):
+    IS_INLINE_ELEMENT = False
+
     @property
     def expr(self) -> ParserElement:
         # Text with dashed below it turns into a heading. To prevent this

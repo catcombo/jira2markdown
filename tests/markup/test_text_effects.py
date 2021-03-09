@@ -27,7 +27,10 @@ class TestBold:
         assert convert("single *char") == r"single \*char"
 
     def test_adjacent_tokens(self):
-        assert convert("*bold**text*") == "**bold** **text**"
+        assert convert("*some**text*") == "**some** **text**"
+        assert convert("*some*   *text*") == "**some**   **text**"
+        assert convert("**text**") == r"\***text**\*"
+        assert convert("**some****text**") == r"\***some**\*\***text**\*"
 
     def test_empty_text(self):
         assert convert("**") == r"\*\*"
@@ -53,6 +56,12 @@ class TestStrikethrough:
 
     def test_multiline(self):
         assert convert("-multiline\nstrikethrough-") == "-multiline\nstrikethrough-"
+
+    def test_adjacent_tokens(self):
+        assert convert("-some--text-") == "~~some~~ ~~text~~"
+        assert convert("-some-   -text-") == "~~some~~   ~~text~~"
+        assert convert("--text--") == "-~~text~~-"
+        assert convert("--some----text--") == "-~~some~~--~~text~~-"
 
 
 class TestUnderline:
@@ -96,6 +105,12 @@ class TestInlineQuote:
     def test_multiline(self):
         assert convert("??multiline\nunderline??") == "??multiline\nunderline??"
 
+    def test_adjacent_tokens(self):
+        assert convert("??some????text??") == "<q>some</q> <q>text</q>"
+        assert convert("??some??   ??text??") == "<q>some</q>   <q>text</q>"
+        assert convert("????text????") == "??<q>text</q>??"
+        assert convert("????some????????text????") == "??<q>some</q>????<q>text</q>??"
+
 
 class TestSuperscript:
     def test_basic_conversion(self):
@@ -117,6 +132,12 @@ class TestSuperscript:
     def test_multiline(self):
         assert convert("^multiline\nunderline^") == "^multiline\nunderline^"
 
+    def test_adjacent_tokens(self):
+        assert convert("^some^^text^") == "<sup>some</sup> <sup>text</sup>"
+        assert convert("^some^   ^text^") == "<sup>some</sup>   <sup>text</sup>"
+        assert convert("^^text^^") == "^<sup>text</sup>^"
+        assert convert("^^some^^^^text^^") == "^<sup>some</sup>^^<sup>text</sup>^"
+
 
 class TestSubscript:
     def test_basic_conversion(self):
@@ -137,6 +158,12 @@ class TestSubscript:
 
     def test_multiline(self):
         assert convert("~multiline\nunderline~") == "~multiline\nunderline~"
+
+    def test_adjacent_tokens(self):
+        assert convert("~some~~text~") == "<sub>some</sub> <sub>text</sub>"
+        assert convert("~some~   ~text~") == "<sub>some</sub>   <sub>text</sub>"
+        assert convert("~~text~~") == "~<sub>text</sub>~"
+        assert convert("~~some~~~~text~~") == "~<sub>some</sub>~~<sub>text</sub>~"
 
 
 class TestColor:

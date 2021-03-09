@@ -54,8 +54,14 @@ class MarkupElements(list):
         index = self.index(old_element)
         self[index] = new_element
 
-    def to_expression(self, markup: Forward, usernames: dict) -> ParseExpression:
+    def expr(
+            self,
+            inline_markup: Forward,
+            markup: Forward,
+            usernames: dict,
+            elements: Iterable[Type[AbstractMarkup]],
+    ) -> ParseExpression:
         return MatchFirst([
-            element(markup=markup, usernames=usernames).expr
-            for element in self
+            element(inline_markup=inline_markup, markup=markup, usernames=usernames).expr
+            for element in elements
         ])
