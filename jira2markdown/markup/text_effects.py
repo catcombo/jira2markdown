@@ -148,8 +148,10 @@ class Quote(AbstractMarkup):
 
 class BlockQuote(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        text = self.markup.transformString(tokens[0].strip())
-        return "\n".join([f"> {line.lstrip()}" for line in text.splitlines()])
+        text = self.markup.transformString("\n".join([
+            line.lstrip() for line in tokens[0].strip().splitlines()
+        ]))
+        return "\n".join([f"> {line}" for line in text.splitlines()])
 
     @property
     def expr(self) -> ParserElement:

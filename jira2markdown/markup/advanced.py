@@ -37,13 +37,17 @@ class Code(AbstractMarkup):
 
 class Panel(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        text = self.markup.transformString(tokens.text.strip())
-
         for param, value in tokens.get("params", []):
             if param.lower() == "title":
-                text = f"**{value}**\n{text}"
+                prefix = f"> **{value}**\n"
+                break
+        else:
+            prefix = ""
 
-        return "\n".join([f"> {line.lstrip()}" for line in text.splitlines()])
+        text = self.markup.transformString("\n".join([
+            line.lstrip() for line in tokens.text.strip().splitlines()
+        ]))
+        return prefix + "\n".join([f"> {line}" for line in text.splitlines()])
 
     @property
     def expr(self) -> ParserElement:
