@@ -12,13 +12,17 @@ class TestMailTo:
 
 class TestLink:
     def test_basic_conversion(self):
-        assert convert("[http://jira.atlassian.com]") == "<http://jira.atlassian.com>"
+        assert convert("[http://example.com]") == "<http://example.com>"
+        assert convert("[ftp://example.com]") == "<ftp://example.com>"
+        assert convert("[WWW.EXAMPLE.COM]") == "<https://WWW.EXAMPLE.COM>"
 
     def test_alias(self):
-        assert convert("[Atlassian|http://atlassian.com]") == "[Atlassian](http://atlassian.com)"
+        assert convert("[Example text|http://example.com]") == "[Example text](http://example.com)"
 
-    def test_exceptions(self):
+    def test_text(self):
         assert convert("[Text in square brackets]") == "[Text in square brackets]"
+        assert convert("[Some text|]") == r"[Some text\|]"
+        assert convert("[Some text|More text]") == r"[Some text\|More text]"
 
 
 class TestAttachment:

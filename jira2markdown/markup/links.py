@@ -28,21 +28,29 @@ class MailTo(AbstractMarkup):
 
 
 class Link(AbstractMarkup):
+    URL_PREFIXES = ["http", "ftp"]
+
     def action(self, tokens: ParseResults) -> str:
-        alias = getattr(tokens, "alias", "")
+        alias = self.markup.transformString(getattr(tokens, "alias", ""))
         url = tokens.url
 
-        if len(alias) > 0:
-            alias = self.markup.transformString(alias)
-            return f"[{alias}]({url})"
-        else:
-            return f"<{url}>"
+        if url.lower().startswith("www."):
+            url = f"https://{url}"
+
+        if not any(map(url.lower().startswith, self.URL_PREFIXES)):
+            url = self.markup.transformString(url)
+            return fr"[{alias}\|{url}]" if alias else f"[{url}]"
+
+        return f"[{alias}]({url})" if len(alias) > 0 else f"<{url}>"
 
     @property
     def expr(self) -> ParserElement:
-        ALIAS_LINK = SkipTo("|", failOn="]").setResultsName("alias") + "|" + SkipTo("]").setResultsName("url")
-        LINK = Combine("http" + SkipTo("]")).setResultsName("url")
-        return Combine("[" + (LINK ^ ALIAS_LINK) + "]").setParseAction(self.action)
+        return Combine(
+            "["
+            + Optional(SkipTo("|", failOn="]").setResultsName("alias") + "|")
+            + SkipTo("]").setResultsName("url")
+            + "]",
+        ).setParseAction(self.action)
 
 
 class Attachment(AbstractMarkup):
