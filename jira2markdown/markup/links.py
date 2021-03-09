@@ -8,17 +8,21 @@ from jira2markdown.markup.base import AbstractMarkup
 
 class MailTo(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        return f"<{tokens.email}>"
+        alias = self.markup.transformString(getattr(tokens, "alias", ""))
+        email = tokens.email
+
+        if (alias == email) or (len(alias.strip()) == 0):
+            return f"<{email}>"
+        else:
+            return f"[{alias}](mailto:{tokens.email})"
 
     @property
     def expr(self) -> ParserElement:
         return Combine(
             "["
-            + Optional(
-                SkipTo("|", failOn="]") + Suppress("|"),
-            )
+            + Optional(SkipTo("|", failOn="]").setResultsName("alias") + "|")
             + "mailto:"
-            + Word(alphanums + "@.-").setResultsName("email")
+            + Word(alphanums + "@.-_").setResultsName("email")
             + "]",
         ).setParseAction(self.action)
 

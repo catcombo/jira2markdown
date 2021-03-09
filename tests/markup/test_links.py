@@ -3,10 +3,11 @@ from jira2markdown.parser import convert
 
 class TestMailTo:
     def test_basic_conversion(self):
-        assert convert("[mailto:service@atlassian.com]") == "<service@atlassian.com>"
+        assert convert("[mailto:box@example.com]") == "<box@example.com>"
 
     def test_alias(self):
-        assert convert("[Some text|mailto:service@atlassian.com]") == "<service@atlassian.com>"
+        assert convert("[box@example.com|mailto:box@example.com]") == "<box@example.com>"
+        assert convert("[Some text|mailto:home_box@domain-name.com]") == "[Some text](mailto:home_box@domain-name.com)"
 
 
 class TestLink:
