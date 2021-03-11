@@ -14,7 +14,7 @@ def convert(text: str, usernames: Optional[dict] = None, elements: Optional[Mark
     inline_markup = Forward()
     markup = Forward()
 
-    inline_markup << elements.expr(inline_markup, markup, usernames, filter(lambda e: e.IS_INLINE_ELEMENT, elements))
+    inline_markup << elements.expr(inline_markup, markup, usernames, filter(lambda e: e.is_inline_element, elements))
     markup << elements.expr(inline_markup, markup, usernames, elements)
 
     return markup.transformString(text)

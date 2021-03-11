@@ -34,7 +34,7 @@ class ListIndent(ParserElement):
 
 
 class List(AbstractMarkup):
-    IS_INLINE_ELEMENT = False
+    is_inline_element = False
 
     def __init__(self, nested_token: str, nested_indent: int, tokens: str, indent: int, bullet: str, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -120,7 +120,7 @@ class Color(AbstractMarkup):
 
 
 class Quote(AbstractMarkup):
-    IS_INLINE_ELEMENT = False
+    is_inline_element = False
 
     @property
     def expr(self) -> ParserElement:

@@ -4,7 +4,7 @@ from jira2markdown.markup.base import AbstractMarkup
 
 
 class Headings(AbstractMarkup):
-    IS_INLINE_ELEMENT = False
+    is_inline_element = False
 
     def action(self, tokens: ParseResults) -> str:
         return "#" * int(tokens.level[1]) + " " + self.inline_markup.transformString(tokens.text)
