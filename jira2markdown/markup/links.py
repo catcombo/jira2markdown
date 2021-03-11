@@ -1,48 +1,59 @@
 from string import punctuation
 
-from pyparsing import CaselessLiteral, Char, Combine, FollowedBy, Forward, Optional, ParseResults, ParserElement, \
+from pyparsing import CaselessLiteral, Char, Combine, FollowedBy, Optional, ParseResults, ParserElement, \
     PrecededBy, SkipTo, StringEnd, StringStart, Suppress, White, Word, alphanums
 
+from jira2markdown.markup.base import AbstractMarkup
 
-class MailTo:
+
+class MailTo(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        return f"<{tokens.email}>"
+        alias = self.markup.transformString(getattr(tokens, "alias", ""))
+        email = tokens.email
+
+        if (alias == email) or (len(alias.strip()) == 0):
+            return f"<{email}>"
+        else:
+            return f"[{alias}](mailto:{tokens.email})"
 
     @property
     def expr(self) -> ParserElement:
         return Combine(
             "["
-            + Optional(
-                SkipTo("|", failOn="]") + Suppress("|"),
-            )
+            + Optional(SkipTo("|", failOn="]").setResultsName("alias") + "|")
             + "mailto:"
-            + Word(alphanums + "@.-").setResultsName("email")
+            + Word(alphanums + "@.-_").setResultsName("email")
             + "]",
         ).setParseAction(self.action)
 
 
-class Link:
-    def __init__(self, markup: Forward):
-        self.markup = markup
+class Link(AbstractMarkup):
+    URL_PREFIXES = ["http", "ftp"]
 
     def action(self, tokens: ParseResults) -> str:
-        alias = getattr(tokens, "alias", "")
+        alias = self.markup.transformString(getattr(tokens, "alias", ""))
         url = tokens.url
 
-        if len(alias) > 0:
-            alias = self.markup.transformString(alias)
-            return f"[{alias}]({url})"
-        else:
-            return f"<{url}>"
+        if url.lower().startswith("www."):
+            url = f"https://{url}"
+
+        if not any(map(url.lower().startswith, self.URL_PREFIXES)):
+            url = self.markup.transformString(url)
+            return fr"[{alias}\|{url}]" if alias else f"[{url}]"
+
+        return f"[{alias}]({url})" if len(alias) > 0 else f"<{url}>"
 
     @property
     def expr(self) -> ParserElement:
-        ALIAS_LINK = SkipTo("|", failOn="]").setResultsName("alias") + "|" + SkipTo("]").setResultsName("url")
-        LINK = Combine("http" + SkipTo("]")).setResultsName("url")
-        return Combine("[" + (LINK ^ ALIAS_LINK) + "]").setParseAction(self.action)
+        return Combine(
+            "["
+            + Optional(SkipTo("|", failOn="]").setResultsName("alias") + "|")
+            + SkipTo("]").setResultsName("url")
+            + "]",
+        ).setParseAction(self.action)
 
 
-class Attachment:
+class Attachment(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return f"[{tokens.filename}]({tokens.filename})"
 
@@ -51,10 +62,7 @@ class Attachment:
         return Combine("[^" + SkipTo("]").setResultsName("filename") + "]").setParseAction(self.action)
 
 
-class Mention:
-    def __init__(self, usernames: dict):
-        self.usernames = usernames
-
+class Mention(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         username = self.usernames.get(tokens.accountid)
         return f"@{tokens.accountid}" if username is None else f"@{username}"

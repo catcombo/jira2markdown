@@ -1,13 +1,13 @@
-from pyparsing import Combine, Forward, Group, LineEnd, LineStart, Literal, OneOrMore, Optional, ParseResults, \
+from pyparsing import Combine, Group, LineEnd, LineStart, Literal, OneOrMore, Optional, ParseResults, \
     ParserElement, SkipTo, StringEnd, StringStart, White, ZeroOrMore
 
+from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.images import Image
 from jira2markdown.markup.links import Link, MailTo, Mention
 
 
-class Table:
-    def __init__(self, markup: Forward):
-        self.markup = markup
+class Table(AbstractMarkup):
+    is_inline_element = False
 
     def action(self, tokens: ParseResults) -> str:
         lines = [line for line in tokens if len(line) > 0]
@@ -38,7 +38,8 @@ class Table:
         NL = LineEnd().suppress()
         SEP = (Literal("||") | Literal("|")).suppress()
         ROW_BREAK = NL + SEP | NL + NL | StringEnd()
-        IGNORE = Link(self.markup).expr | MailTo().expr | Image().expr | Mention({}).expr
+        IGNORE = Link(**self.init_kwargs).expr | MailTo(**self.init_kwargs).expr \
+            | Image(**self.init_kwargs).expr | Mention(**self.init_kwargs).expr
 
         ROW = SEP + ZeroOrMore(
             SkipTo(SEP | ROW_BREAK, ignore=IGNORE) + Optional(SEP),

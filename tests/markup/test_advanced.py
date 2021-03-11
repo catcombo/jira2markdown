@@ -67,10 +67,12 @@ class TestPanel:
     def test_basic_conversion(self):
         assert convert("""
 {panel}
-Some text
+  Some text
+       more line
 {panel}
 """) == """
 > Some text
+> more line
 """
 
     def test_title(self):

@@ -3,8 +3,10 @@ import re
 from pyparsing import Combine, Optional, ParseResults, ParserElement, PrecededBy, Regex, SkipTo, StringStart, Word, \
     printables
 
+from jira2markdown.markup.base import AbstractMarkup
 
-class Image:
+
+class Image(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         return f"![{tokens.url}]({tokens.url})"
 
