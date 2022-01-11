@@ -13,6 +13,19 @@ class TestNoformat:
         assert convert("{noformat}  \n  \n  preformatted piece\n   of text\n{noformat}") == \
                "```\n  \n  \n  preformatted piece\n   of text\n```"
 
+    def test_multiple_parameters(self):
+        assert convert("""
+{noformat:borderStyle=dashed|borderColor=#ccc|title=My Title|titleBGColor=#F7D6C1|bgColor=#FFFFCE}
+a block of code
+surrounded with a noformat
+{noformat}
+""") == """
+```
+a block of code
+surrounded with a noformat
+```
+"""
+
 
 class TestCode:
     def test_default_language(self):
