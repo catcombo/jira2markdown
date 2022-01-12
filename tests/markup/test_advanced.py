@@ -75,6 +75,25 @@ public String getFoo()
 ```
 """
 
+    def test_multiple_parameters(self):
+        assert convert("""
+{code:C++|title=test.cpp}
+static int x = 10;
+
+struct Foo {
+    int x;
+};
+{code}
+""") == """
+```C++
+static int x = 10;
+
+struct Foo {
+    int x;
+};
+```
+"""
+
 
 class TestPanel:
     def test_basic_conversion(self):

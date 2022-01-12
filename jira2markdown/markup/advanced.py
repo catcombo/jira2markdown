@@ -30,8 +30,8 @@ class Code(AbstractMarkup):
             "{code"
             + Optional(
                 ":"
-                + Word(alphanums).setResultsName("lang")
-                + FollowedBy("}"),
+                + Word(alphanums + "#+").setResultsName("lang")
+                + FollowedBy(Literal("}") | Literal("|")),
             )
             + ... + "}"
             + SkipTo("{code}").setResultsName("text")
