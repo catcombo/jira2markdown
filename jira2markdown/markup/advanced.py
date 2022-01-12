@@ -1,17 +1,21 @@
 from pyparsing import Combine, FollowedBy, Group, Literal, OneOrMore, Optional, ParseResults, ParserElement, \
-    QuotedString, SkipTo, Suppress, Word, alphanums, alphas
+    SkipTo, Suppress, Word, alphanums, alphas
 
 from jira2markdown.markup.base import AbstractMarkup
 
 
 class Noformat(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        text = tokens[0].strip("\n")
+        text = tokens.text.strip("\n")
         return f"```\n{text}\n```"
 
     @property
     def expr(self) -> ParserElement:
-        return QuotedString("{noformat}", multiline=True).setParseAction(self.action)
+        return Combine(
+            Literal("{noformat") + ... + Literal("}")
+            + SkipTo("{noformat}").setResultsName("text")
+            + "{noformat}",
+        ).setParseAction(self.action)
 
 
 class Code(AbstractMarkup):
@@ -26,8 +30,8 @@ class Code(AbstractMarkup):
             "{code"
             + Optional(
                 ":"
-                + Word(alphanums).setResultsName("lang")
-                + FollowedBy("}"),
+                + Word(alphanums + "#+").setResultsName("lang")
+                + FollowedBy(Literal("}") | Literal("|")),
             )
             + ... + "}"
             + SkipTo("{code}").setResultsName("text")
