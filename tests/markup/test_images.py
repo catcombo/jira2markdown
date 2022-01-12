@@ -3,8 +3,10 @@ from jira2markdown import convert
 
 class TestImage:
     def test_basic_conversion(self):
-        assert convert("!http://www.example.com/image.png!") == \
-               "![http://www.example.com/image.png](http://www.example.com/image.png)"
+        assert (
+            convert("!http://www.example.com/image.png!")
+            == "![http://www.example.com/image.png](http://www.example.com/image.png)"
+        )
         assert convert("!attached-image.gif!") == "![attached-image.gif](attached-image.gif)"
 
     def test_thumbnail(self):

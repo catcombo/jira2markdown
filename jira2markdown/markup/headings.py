@@ -1,4 +1,4 @@
-from pyparsing import Combine, LineEnd, ParseResults, ParserElement, SkipTo, StringEnd, StringStart, Word
+from pyparsing import Combine, LineEnd, ParserElement, ParseResults, SkipTo, StringEnd, StringStart, Word
 
 from jira2markdown.markup.base import AbstractMarkup
 

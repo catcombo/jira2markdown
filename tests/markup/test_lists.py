@@ -3,43 +3,58 @@ from jira2markdown import convert
 
 class TestUnorderedList:
     def test_bullets(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * some
 * bullet
 ** indented
 ** bullets
 * points
-        """) == """
+        """
+            )
+            == """
 - some
 - bullet
   - indented
   - bullets
 - points
         """
-        assert convert("""
+        )
+        assert (
+            convert(
+                """
 - some
 - bullet
 -- indented
 -- bullets
 - points
-        """) == """
+        """
+            )
+            == """
 - some
 - bullet
   - indented
   - bullets
 - points
         """
+        )
 
     def test_mixed_bullets(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 #* nested
 #** bullet
 #** list
-        """) == """
+        """
+            )
+            == """
    - nested
      - bullet
      - list
         """
+        )
 
     def test_match_start_conditions(self):
         assert convert("* Item") == "- Item"
@@ -47,22 +62,29 @@ class TestUnorderedList:
         assert convert("  * Item") == r"  \* Item"
 
     def test_multiline(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * Item
 Line
 Next
 
 Break
-""") == """
+"""
+            )
+            == """
 - Item
   Line
   Next
 
 Break
 """
+        )
 
     def test_start_indent(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * First
 ** Second
 
@@ -71,7 +93,9 @@ Break
 
 * Last
 ** One
-""") == r"""
+"""
+            )
+            == r"""
 - First
   - Second
 
@@ -81,94 +105,132 @@ Break
 - Last
   - One
 """
-        assert convert("""
+        )
+        assert (
+            convert(
+                """
 -- One
 --- Two
-""") == """
+"""
+            )
+            == """
 – One
 — Two
 """
+        )
 
     def test_indent_step(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * one
 ** two
 **** four
-""") == r"""
+"""
+            )
+            == r"""
 - one
   - two
 \*\*\*\* four
 """
+        )
 
     def test_empty_list(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * 
 ** 
 - 
 -- 
-        """) == """
+        """
+            )
+            == """
 
 - 
   - 
 - 
   - 
         """
+        )
 
     def test_text_indent(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 Some text
 * 
-""") == """
+"""
+            )
+            == """
 Some text
 
 - 
 """
+        )
 
 
 class TestOrderedList:
     def test_bullets(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 # a
 # numbered
 # list
 ## indented
 ## bullets
-        """) == """
+        """
+            )
+            == """
 1. a
 1. numbered
 1. list
    1. indented
    1. bullets
         """
+        )
 
     def test_mixed_bullets(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 *# nested
 *## numbered
 *## list
-        """) == """
+        """
+            )
+            == """
   1. nested
      1. numbered
      1. list
         """
+        )
 
     def test_multiline(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 # Item
 Line
 Next
 
 Break
-""") == """
+"""
+            )
+            == """
 1. Item
    Line
    Next
 
 Break
 """
+        )
 
     def test_start_indent(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 # First
 ## Second
 
@@ -177,7 +239,9 @@ Break
 
 # Last
 ## One
-""") == """
+"""
+            )
+            == """
 1. First
    1. Second
 
@@ -187,23 +251,34 @@ Break
 1. Last
    1. One
 """
+        )
 
     def test_indent_step(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 # one
 ## two
 #### four
-""") == r"""
+"""
+            )
+            == r"""
 1. one
    1. two
 #### four
 """
+        )
 
     def test_empty_list(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 # 
 ## 
-        """) == r"""
+        """
+            )
+            == r"""
 1. 
    1. 
         """
+        )

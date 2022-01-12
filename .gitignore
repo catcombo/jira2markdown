@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # IDE
-/.idea/
+.idea/*
+!.idea/watcherTasks.xml

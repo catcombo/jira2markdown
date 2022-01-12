@@ -1,8 +1,28 @@
 import re
 
-from pyparsing import CaselessLiteral, Char, Combine, FollowedBy, Literal, Optional, ParseResults, ParserElement, \
-    PrecededBy, QuotedString, Regex, SkipTo, StringEnd, StringStart, Suppress, White, Word, alphas, hexnums, nums, \
-    replaceWith
+from pyparsing import (
+    CaselessLiteral,
+    Char,
+    Combine,
+    FollowedBy,
+    Literal,
+    Optional,
+    ParserElement,
+    ParseResults,
+    PrecededBy,
+    QuotedString,
+    Regex,
+    SkipTo,
+    StringEnd,
+    StringStart,
+    Suppress,
+    White,
+    Word,
+    alphas,
+    hexnums,
+    nums,
+    replaceWith,
+)
 
 from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.images import Image
@@ -15,9 +35,9 @@ class QuotedElement(AbstractMarkup):
     END_QUOTE_CHAR = ""
 
     def action(self, tokens: ParseResults) -> str:
-        return self.QUOTE_CHAR \
-            + self.inline_markup.transformString(tokens[0]) \
-            + (self.END_QUOTE_CHAR or self.QUOTE_CHAR)
+        return (
+            self.QUOTE_CHAR + self.inline_markup.transformString(tokens[0]) + (self.END_QUOTE_CHAR or self.QUOTE_CHAR)
+        )
 
     def get_ignore_expr(self) -> ParserElement:
         return Color(**self.init_kwargs).expr
@@ -35,8 +55,9 @@ class QuotedElement(AbstractMarkup):
             + FollowedBy(NON_ALPHANUMS | StringEnd()),
         )
 
-        return (StringStart() | PrecededBy(NON_ALPHANUMS, retreat=1)) \
-            + Combine(ELEMENT.setParseAction(self.action) + Optional(~ELEMENT, default=" "))
+        return (StringStart() | PrecededBy(NON_ALPHANUMS, retreat=1)) + Combine(
+            ELEMENT.setParseAction(self.action) + Optional(~ELEMENT, default=" "),
+        )
 
 
 class Bold(QuotedElement):
@@ -49,11 +70,13 @@ class Strikethrough(QuotedElement):
     QUOTE_CHAR = "~~"
 
     def get_ignore_expr(self) -> ParserElement:
-        return Color(**self.init_kwargs).expr \
-            | Attachment(**self.init_kwargs).expr \
-            | Mention(**self.init_kwargs).expr \
-            | Link(**self.init_kwargs).expr \
+        return (
+            Color(**self.init_kwargs).expr
+            | Attachment(**self.init_kwargs).expr
+            | Mention(**self.init_kwargs).expr
+            | Link(**self.init_kwargs).expr
             | Image(**self.init_kwargs).expr
+        )
 
 
 class Underline(QuotedElement):
@@ -103,17 +126,21 @@ class Color(AbstractMarkup):
         INTENSITY = Word(nums)
         ALPHA = Word(nums + ".")
         SEP = "," + Optional(White())
-        RGBA = CaselessLiteral("rgba(") \
-            + INTENSITY.setResultsName("red") + SEP \
-            + INTENSITY.setResultsName("green") + SEP \
-            + INTENSITY.setResultsName("blue") + SEP \
-            + ALPHA + ")"
+        RGBA = (
+            CaselessLiteral("rgba(")
+            + INTENSITY.setResultsName("red")
+            + SEP
+            + INTENSITY.setResultsName("green")
+            + SEP
+            + INTENSITY.setResultsName("blue")
+            + SEP
+            + ALPHA
+            + ")"
+        )
 
         COLOR = Word("#", hexnums) ^ Word(alphas) ^ RGBA
         expr = Combine(
-            "{color:" + COLOR.setResultsName("color") + "}"
-            + SkipTo("{color}").setResultsName("text")
-            + "{color}",
+            "{color:" + COLOR.setResultsName("color") + "}" + SkipTo("{color}").setResultsName("text") + "{color}",
         )
 
         return expr.setParseAction(self.action)
@@ -129,9 +156,7 @@ class Quote(AbstractMarkup):
 
 class BlockQuote(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        text = self.markup.transformString("\n".join([
-            line.lstrip() for line in tokens[0].strip().splitlines()
-        ]))
+        text = self.markup.transformString("\n".join([line.lstrip() for line in tokens[0].strip().splitlines()]))
         return "\n".join([f"> {line}" for line in text.splitlines()])
 
     @property
