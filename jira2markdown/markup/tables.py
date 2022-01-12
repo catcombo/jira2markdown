@@ -1,5 +1,19 @@
-from pyparsing import Combine, Group, LineEnd, LineStart, Literal, OneOrMore, Optional, ParseResults, \
-    ParserElement, SkipTo, StringEnd, StringStart, White, ZeroOrMore
+from pyparsing import (
+    Combine,
+    Group,
+    LineEnd,
+    LineStart,
+    Literal,
+    OneOrMore,
+    Optional,
+    ParserElement,
+    ParseResults,
+    SkipTo,
+    StringEnd,
+    StringStart,
+    White,
+    ZeroOrMore,
+)
 
 from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.images import Image
@@ -16,12 +30,14 @@ class Table(AbstractMarkup):
         # Converts multiline text to one line,
         # because markdown doesn't support multiline text in table cells
         output = [
-            "|" + "|".join(
+            "|"
+            + "|".join(
                 map(
                     lambda cell: cell.replace("\n", "<br>"),
                     map(self.markup.transformString, row),
                 ),
-            ) + "|"
+            )
+            + "|"
             for row in lines
         ]
 
@@ -38,8 +54,12 @@ class Table(AbstractMarkup):
         NL = LineEnd().suppress()
         SEP = (Literal("||") | Literal("|")).suppress()
         ROW_BREAK = NL + SEP | NL + NL | StringEnd()
-        IGNORE = Link(**self.init_kwargs).expr | MailTo(**self.init_kwargs).expr \
-            | Image(**self.init_kwargs).expr | Mention(**self.init_kwargs).expr
+        IGNORE = (
+            Link(**self.init_kwargs).expr
+            | MailTo(**self.init_kwargs).expr
+            | Image(**self.init_kwargs).expr
+            | Mention(**self.init_kwargs).expr
+        )
 
         ROW = SEP + ZeroOrMore(
             SkipTo(SEP | ROW_BREAK, ignore=IGNORE) + Optional(SEP),
@@ -47,6 +67,8 @@ class Table(AbstractMarkup):
         )
 
         EMPTY_LINE = Combine("\n" + White(" \t", min=0) + "\n")
-        return ((StringStart() + Optional("\n")) ^ Optional(EMPTY_LINE, default="\n")) \
-            + OneOrMore(LineStart() + Group(ROW) + NL).setParseAction(self.action) \
+        return (
+            ((StringStart() + Optional("\n")) ^ Optional(EMPTY_LINE, default="\n"))
+            + OneOrMore(LineStart() + Group(ROW) + NL).setParseAction(self.action)
             + (StringEnd() | Optional(LineEnd(), default="\n"))
+        )

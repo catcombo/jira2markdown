@@ -1,7 +1,17 @@
 import re
 
-from pyparsing import Combine, Optional, ParseResults, ParserElement, PrecededBy, Regex, SkipTo, StringStart, Word, \
-    printables
+from pyparsing import (
+    Combine,
+    Optional,
+    ParserElement,
+    ParseResults,
+    PrecededBy,
+    Regex,
+    SkipTo,
+    StringStart,
+    Word,
+    printables,
+)
 
 from jira2markdown.markup.base import AbstractMarkup
 
@@ -16,5 +26,6 @@ class Image(AbstractMarkup):
             "!"
             + Word(printables + " ", min=3, excludeChars="|!").setResultsName("url")
             + Optional("|")
-            + SkipTo("!", failOn="\n") + "!",
+            + SkipTo("!", failOn="\n")
+            + "!",
         ).setParseAction(self.action)

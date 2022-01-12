@@ -10,73 +10,105 @@ class TestLineBreakIndent:
 
 class TestBlockQuoteContent:
     def test_list(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 {quote}
 * Item
 ** Line
 {quote}
-""") == """
+"""
+            )
+            == """
 > - Item
 >   - Line
 """
+        )
 
 
 class TestRecursiveContent:
     def test_bold_color(self):
-        assert convert("*text {color:red}*text inside*{color} outside*") == \
-               '**text <font color="red">**text inside**</font> outside**'
-        assert convert("*text {color:red}contains* token{color} outside*") == \
-               r'**text <font color="red">contains\* token</font> outside**'
+        assert (
+            convert("*text {color:red}*text inside*{color} outside*")
+            == '**text <font color="red">**text inside**</font> outside**'
+        )
+        assert (
+            convert("*text {color:red}contains* token{color} outside*")
+            == r'**text <font color="red">contains\* token</font> outside**'
+        )
 
     def test_strikethrough_color(self):
-        assert convert("-text {color:green}-text inside-{color} outside-") == \
-               '~~text <font color="green">~~text inside~~</font> outside~~'
-        assert convert("-text {color:green}contains- token{color} outside-") == \
-               '~~text <font color="green">contains- token</font> outside~~'
+        assert (
+            convert("-text {color:green}-text inside-{color} outside-")
+            == '~~text <font color="green">~~text inside~~</font> outside~~'
+        )
+        assert (
+            convert("-text {color:green}contains- token{color} outside-")
+            == '~~text <font color="green">contains- token</font> outside~~'
+        )
 
     def test_underline_color(self):
-        assert convert("+text {color:blue}+text inside+{color} outside+") == \
-               'text <font color="blue">text inside</font> outside'
-        assert convert("+text {color:blue}contains+ token{color} outside+") == \
-               'text <font color="blue">contains+ token</font> outside'
+        assert (
+            convert("+text {color:blue}+text inside+{color} outside+")
+            == 'text <font color="blue">text inside</font> outside'
+        )
+        assert (
+            convert("+text {color:blue}contains+ token{color} outside+")
+            == 'text <font color="blue">contains+ token</font> outside'
+        )
 
     def test_inlinequote_color(self):
-        assert convert("??text {color:blue}??text inside??{color} outside??") == \
-               '<q>text <font color="blue"><q>text inside</q></font> outside</q>'
-        assert convert("??text {color:blue}contains?? token{color} outside??") == \
-               '<q>text <font color="blue">contains?? token</font> outside</q>'
+        assert (
+            convert("??text {color:blue}??text inside??{color} outside??")
+            == '<q>text <font color="blue"><q>text inside</q></font> outside</q>'
+        )
+        assert (
+            convert("??text {color:blue}contains?? token{color} outside??")
+            == '<q>text <font color="blue">contains?? token</font> outside</q>'
+        )
 
     def test_superscript_color(self):
-        assert convert("^text {color:blue}^text inside^{color} outside^") == \
-               '<sup>text <font color="blue"><sup>text inside</sup></font> outside</sup>'
-        assert convert("^text {color:blue}contains^ token{color} outside^") == \
-               '<sup>text <font color="blue">contains^ token</font> outside</sup>'
+        assert (
+            convert("^text {color:blue}^text inside^{color} outside^")
+            == '<sup>text <font color="blue"><sup>text inside</sup></font> outside</sup>'
+        )
+        assert (
+            convert("^text {color:blue}contains^ token{color} outside^")
+            == '<sup>text <font color="blue">contains^ token</font> outside</sup>'
+        )
 
     def test_superscript_attachment(self):
-        assert convert("^text [^attachment.ext] outside^") == \
-               "<sup>text [attachment.ext](attachment.ext) outside</sup>"
+        assert convert("^text [^attachment.ext] outside^") == "<sup>text [attachment.ext](attachment.ext) outside</sup>"
 
     def test_subscript_color(self):
-        assert convert("~text {color:blue}~text inside~{color} outside~") == \
-               '<sub>text <font color="blue"><sub>text inside</sub></font> outside</sub>'
-        assert convert("~text {color:blue}contains~ token{color} outside~") == \
-               '<sub>text <font color="blue">contains~ token</font> outside</sub>'
+        assert (
+            convert("~text {color:blue}~text inside~{color} outside~")
+            == '<sub>text <font color="blue"><sub>text inside</sub></font> outside</sub>'
+        )
+        assert (
+            convert("~text {color:blue}contains~ token{color} outside~")
+            == '<sub>text <font color="blue">contains~ token</font> outside</sub>'
+        )
 
     def test_subscript_mention(self):
         assert convert("~text [~username] outside~") == "<sub>text @username outside</sub>"
 
 
-@pytest.mark.parametrize("token,test_input,expected", [
-    ("headings", "h2. %s", "## %s"),
-    ("bold", "*%s*", "**%s**"),
-    ("strikethrough", "-%s-", "~~%s~~"),
-    ("underline", "+%s+", "%s"),
-    ("inlinequote", "??%s??", "<q>%s</q>"),
-    ("superscript", "^%s^", "<sup>%s</sup>"),
-    ("subscript", "~%s~", "<sub>%s</sub>"),
-    ("color", "{color:red}%s{color}", '<font color="red">%s</font>'),
-    ("quote", "bq. %s", "> %s"),
-], ids=["headings", "bold", "strikethrough", "underline", "inlinequote", "superscript", "subscript", "color", "quote"])
+@pytest.mark.parametrize(
+    "token,test_input,expected",
+    [
+        ("headings", "h2. %s", "## %s"),
+        ("bold", "*%s*", "**%s**"),
+        ("strikethrough", "-%s-", "~~%s~~"),
+        ("underline", "+%s+", "%s"),
+        ("inlinequote", "??%s??", "<q>%s</q>"),
+        ("superscript", "^%s^", "<sup>%s</sup>"),
+        ("subscript", "~%s~", "<sub>%s</sub>"),
+        ("color", "{color:red}%s{color}", '<font color="red">%s</font>'),
+        ("quote", "bq. %s", "> %s"),
+    ],
+    ids=["headings", "bold", "strikethrough", "underline", "inlinequote", "superscript", "subscript", "color", "quote"],
+)
 class TestInlineElements:
     def test_headings(self, token, test_input, expected):
         assert convert(test_input % "h2. Heading") == expected % "h2. Heading"
@@ -133,23 +165,26 @@ class TestInlineElements:
         assert convert(test_input % "[~username]") == expected % "@username"
 
 
-@pytest.mark.parametrize("token,test_input,expected", [
-    ("blockquote", "{quote}%s{quote}", ["> %s", "> %s"]),
-    ("panel", "{panel}%s{panel}", ["> %s", "> %s"]),
-    ("table", "|%s\n|row", ["|%s|\n|-|\n|row|\n"]),
-    ("unordered_list", "* %s", ["- %s", "  %s"]),
-    ("ordered_list", "# %s", ["1. %s", "   %s"]),
-], ids=["blockquote", "panel", "table", "unordered_list", "ordered_list"])
+@pytest.mark.parametrize(
+    "token,test_input,expected",
+    [
+        ("blockquote", "{quote}%s{quote}", ["> %s", "> %s"]),
+        ("panel", "{panel}%s{panel}", ["> %s", "> %s"]),
+        ("table", "|%s\n|row", ["|%s|\n|-|\n|row|\n"]),
+        ("unordered_list", "* %s", ["- %s", "  %s"]),
+        ("ordered_list", "# %s", ["1. %s", "   %s"]),
+    ],
+    ids=["blockquote", "panel", "table", "unordered_list", "ordered_list"],
+)
 class TestBlockElements:
     def render_expected(self, expected, text):
         if len(expected) == 1:
             return expected[0] % text
 
         first_line, next_line = expected
-        return "\n".join([
-            first_line % line if i == 0 else next_line % line
-            for i, line in enumerate(text.splitlines())
-        ])
+        return "\n".join(
+            [first_line % line if i == 0 else next_line % line for i, line in enumerate(text.splitlines())]
+        )
 
     def test_headings(self, token, test_input, expected):
         assert convert(test_input % "h2. Heading") == self.render_expected(expected, "## Heading")
@@ -173,8 +208,9 @@ class TestBlockElements:
         assert convert(test_input % "*Bold text*") == self.render_expected(expected, "**Bold text**")
 
     def test_color(self, token, test_input, expected):
-        assert convert(test_input % "{color:red}Red text{color}") == \
-            self.render_expected(expected, '<font color="red">Red text</font>')
+        assert convert(test_input % "{color:red}Red text{color}") == self.render_expected(
+            expected, '<font color="red">Red text</font>'
+        )
 
     def test_blockquote(self, token, test_input, expected):
         if token == "blockquote":
@@ -186,8 +222,9 @@ class TestBlockElements:
         assert convert(test_input % "{{monospaced}}") == self.render_expected(expected, "`monospaced`")
 
     def test_image(self, token, test_input, expected):
-        assert convert(test_input % "!attached-image.gif!") == \
-            self.render_expected(expected, "![attached-image.gif](attached-image.gif)")
+        assert convert(test_input % "!attached-image.gif!") == self.render_expected(
+            expected, "![attached-image.gif](attached-image.gif)"
+        )
 
     def test_link(self, token, test_input, expected):
         assert convert(test_input % "[http://example.com]") == self.render_expected(expected, "<http://example.com>")
@@ -215,8 +252,10 @@ class TestStrikethroughContent:
 
 class TestTableContent:
     def test_basic_markup(self):
-        assert convert("| Table *bold header* and {color:red}colored title{color} |") == \
-            '|Table **bold header** and <font color="red">colored title</font>|\n|-|\n'
+        assert (
+            convert("| Table *bold header* and {color:red}colored title{color} |")
+            == '|Table **bold header** and <font color="red">colored title</font>|\n|-|\n'
+        )
 
     def test_cell_image(self):
         assert convert("|!image.png|width=300!") == "|![image.png](image.png)|\n|-|\n"
@@ -234,59 +273,86 @@ class TestTableContent:
 
 class TestPanelContent:
     def test_text_formatting(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 {panel:title=My Title|borderStyle=dashed|borderColor=#ccc|titleBGColor=#F7D6C1|bgColor=#FFFFCE}
 a block of text surrounded with a *panel*
 line with !image.png|width=300!
 {panel}
-""") == """
+"""
+            )
+            == """
 > **My Title**
 > a block of text surrounded with a **panel**
 > line with ![image.png](image.png)
 """
+        )
 
     def test_list(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 {panel}
 * Item
 ** Line
 {panel}
-""") == """
+"""
+            )
+            == """
 > - Item
 >   - Line
 """
+        )
 
 
 class TestListContent:
     def test_broken_list_markup(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 ----- Hello, -World-! -----
-""") == """
+"""
+            )
+            == """
 ----- Hello, ~~World~~! -----
 """
-        assert convert("""
+        )
+        assert (
+            convert(
+                """
 -- 
 Hello
 {quote}
 World
 {quote}
-""") == """
+"""
+            )
+            == """
 – 
 Hello
 > World
 """
-        assert convert("""
+        )
+        assert (
+            convert(
+                """
 --------- 
 
 -- 
-""") == """
+"""
+            )
+            == """
 --------- 
 
 – 
 """
+        )
 
     def test_list_blockquote(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * Item
 ** Second
 *** {quote}
@@ -295,13 +361,18 @@ Hello
 Some quote
 {quote}
 **** Four
-""") == """
+"""
+            )
+            == """
 - Item
   - Second
     - > Some quote
       - Four
 """
-        assert convert("""
+        )
+        assert (
+            convert(
+                """
 # Item
 ## Second
 ### {quote}
@@ -310,15 +381,20 @@ Some quote
 Some quote
 {quote}
 #### Four
-""") == """
+"""
+            )
+            == """
 1. Item
    1. Second
       1. > Some quote
          1. Four
 """
+        )
 
     def test_list_panel_list(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * Item
 ** Second
 *** {panel}
@@ -327,13 +403,18 @@ Some quote
 Some quote
 {panel}
 **** Four
-""") == """
+"""
+            )
+            == """
 - Item
   - Second
     - > Some quote
       - Four
 """
-        assert convert("""
+        )
+        assert (
+            convert(
+                """
 # Item
 ## Second
 ### {panel}
@@ -342,15 +423,20 @@ Some quote
 Some quote
 {panel}
 #### Four
-""") == """
+"""
+            )
+            == """
 1. Item
    1. Second
       1. > Some quote
          1. Four
 """
+        )
 
     def test_list_color_list(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 * Item
 ** Second
 *** {color:red}
@@ -359,7 +445,9 @@ Some quote
 Some text
 {color}
 **** Four
-""") == """
+"""
+            )
+            == """
 - Item
   - Second
     - <font color="red">
@@ -369,7 +457,10 @@ Some text
       </font>
       - Four
 """
-        assert convert("""
+        )
+        assert (
+            convert(
+                """
 # Item
 ## Second
 ### {color:red}
@@ -378,7 +469,9 @@ Some text
 Some text
 {color}
 #### Four
-""") == """
+"""
+            )
+            == """
 1. Item
    1. Second
       1. <font color="red">
@@ -388,6 +481,7 @@ Some text
          </font>
          1. Four
 """
+        )
 
 
 class TestLink:

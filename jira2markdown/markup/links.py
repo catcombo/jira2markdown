@@ -1,7 +1,22 @@
 from string import punctuation
 
-from pyparsing import CaselessLiteral, Char, Combine, FollowedBy, Optional, ParseResults, ParserElement, \
-    PrecededBy, SkipTo, StringEnd, StringStart, Suppress, White, Word, alphanums
+from pyparsing import (
+    CaselessLiteral,
+    Char,
+    Combine,
+    FollowedBy,
+    Optional,
+    ParserElement,
+    ParseResults,
+    PrecededBy,
+    SkipTo,
+    StringEnd,
+    StringStart,
+    Suppress,
+    White,
+    Word,
+    alphanums,
+)
 
 from jira2markdown.markup.base import AbstractMarkup
 
@@ -80,7 +95,8 @@ class Mention(AbstractMarkup):
             + Word(alphanums + ":-").setResultsName("accountid")
             + "]",
         )
-        return (StringStart() | Optional(PrecededBy(White(), retreat=1), default=" ")) \
-            + MENTION.setParseAction(self.action) \
-            + (StringEnd()
-               | Optional(FollowedBy(White() | Char(punctuation, excludeChars="[") | MENTION), default=" "))
+        return (
+            (StringStart() | Optional(PrecededBy(White(), retreat=1), default=" "))
+            + MENTION.setParseAction(self.action)
+            + (StringEnd() | Optional(FollowedBy(White() | Char(punctuation, excludeChars="[") | MENTION), default=" "))
+        )

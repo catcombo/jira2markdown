@@ -168,12 +168,14 @@ class TestSubscript:
 
 class TestColor:
     def test_color_value(self):
-        assert convert("start {color:#0077ff}hex color{color} text") == \
-               'start <font color="#0077ff">hex color</font> text'
-        assert convert("start {color:red}named color{color} text") == \
-               'start <font color="red">named color</font> text'
-        assert convert("start {color:rgba(255, 127, 63, 0.3)}rgba color{color} text") == \
-               'start <font color="#ff7f3f">rgba color</font> text'
+        assert (
+            convert("start {color:#0077ff}hex color{color} text") == 'start <font color="#0077ff">hex color</font> text'
+        )
+        assert convert("start {color:red}named color{color} text") == 'start <font color="red">named color</font> text'
+        assert (
+            convert("start {color:rgba(255, 127, 63, 0.3)}rgba color{color} text")
+            == 'start <font color="#ff7f3f">rgba color</font> text'
+        )
 
     def test_line_endings(self):
         assert convert("{color:#0077ff}colored{color}") == '<font color="#0077ff">colored</font>'
@@ -184,15 +186,20 @@ class TestColor:
         assert convert("{color:black}\n{color}") == "\n"
 
     def test_multiline(self):
-        assert convert("""
+        assert (
+            convert(
+                """
         {color:red}
             look ma, red text!
         {color}
-        """) == """
+        """
+            )
+            == """
         <font color="red">
             look ma, red text!
         </font>
         """
+        )
 
 
 class TestQuote:
@@ -206,15 +213,20 @@ class TestQuote:
 
 class TestBlockQuote:
     def test_basic_conversion(self):
-        assert convert("""
+        assert (
+            convert(
+                """
 {quote}
     here is quotable
         content to be quoted
 {quote}
-""") == """
+"""
+            )
+            == """
 > here is quotable
 > content to be quoted
 """
+        )
 
 
 class TestMonospaced:

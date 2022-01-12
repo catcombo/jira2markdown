@@ -1,5 +1,18 @@
-from pyparsing import Char, Combine, LineEnd, LineStart, Literal, MatchFirst, OneOrMore, Optional, ParseResults, \
-    ParserElement, SkipTo, StringEnd, White
+from pyparsing import (
+    Char,
+    Combine,
+    LineEnd,
+    LineStart,
+    Literal,
+    MatchFirst,
+    OneOrMore,
+    Optional,
+    ParserElement,
+    ParseResults,
+    SkipTo,
+    StringEnd,
+    White,
+)
 
 from jira2markdown.markup.advanced import Panel
 from jira2markdown.markup.base import AbstractMarkup
@@ -65,10 +78,7 @@ class List(AbstractMarkup):
             text = self.markup.transformString(text).splitlines() or [""]
 
             result.append(
-                "\n".join([
-                    item_padding + line if i == 0 else line_padding + line
-                    for i, line in enumerate(text)
-                ]),
+                "\n".join([item_padding + line if i == 0 else line_padding + line for i, line in enumerate(text)]),
             )
 
         self.indent_state.reset()

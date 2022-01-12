@@ -1,5 +1,18 @@
-from pyparsing import Combine, FollowedBy, Group, Literal, OneOrMore, Optional, ParseResults, ParserElement, \
-    SkipTo, Suppress, Word, alphanums, alphas
+from pyparsing import (
+    Combine,
+    FollowedBy,
+    Group,
+    Literal,
+    OneOrMore,
+    Optional,
+    ParserElement,
+    ParseResults,
+    SkipTo,
+    Suppress,
+    Word,
+    alphanums,
+    alphas,
+)
 
 from jira2markdown.markup.base import AbstractMarkup
 
@@ -12,9 +25,7 @@ class Noformat(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
         return Combine(
-            Literal("{noformat") + ... + Literal("}")
-            + SkipTo("{noformat}").setResultsName("text")
-            + "{noformat}",
+            Literal("{noformat") + ... + Literal("}") + SkipTo("{noformat}").setResultsName("text") + "{noformat}",
         ).setParseAction(self.action)
 
 
@@ -29,11 +40,10 @@ class Code(AbstractMarkup):
         return Combine(
             "{code"
             + Optional(
-                ":"
-                + Word(alphanums + "#+").setResultsName("lang")
-                + FollowedBy(Literal("}") | Literal("|")),
+                ":" + Word(alphanums + "#+").setResultsName("lang") + FollowedBy(Literal("}") | Literal("|")),
             )
-            + ... + "}"
+            + ...
+            + "}"
             + SkipTo("{code}").setResultsName("text")
             + "{code}",
         ).setParseAction(self.action)
@@ -48,17 +58,12 @@ class Panel(AbstractMarkup):
         else:
             prefix = ""
 
-        text = self.markup.transformString("\n".join([
-            line.lstrip() for line in tokens.text.strip().splitlines()
-        ]))
+        text = self.markup.transformString("\n".join([line.lstrip() for line in tokens.text.strip().splitlines()]))
         return prefix + "\n".join([f"> {line}" for line in text.splitlines()])
 
     @property
     def expr(self) -> ParserElement:
-        PARAM = Word(alphas) \
-            + Suppress("=") \
-            + SkipTo(Literal("|") | Literal("}")) \
-            + Optional("|").suppress()
+        PARAM = Word(alphas) + Suppress("=") + SkipTo(Literal("|") | Literal("}")) + Optional("|").suppress()
 
         return Combine(
             "{panel"
