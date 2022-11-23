@@ -23,7 +23,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-pyparsing = "^2.4"
+pyparsing = ">=2.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
