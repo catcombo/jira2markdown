@@ -6,19 +6,19 @@ from jira2markdown.markup.base import AbstractMarkup
 class LineBreak(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
-        return Keyword("\\\\", identChars="\\").setParseAction(replaceWith("\n"))
+        return Keyword("\\\\", ident_chars="\\").set_parse_action(replaceWith("\n"))
 
 
 class Ndash(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
-        return WordStart() + Keyword("--", identChars="-").setParseAction(replaceWith("–")) + WordEnd()
+        return WordStart() + Keyword("--", ident_chars="-").set_parse_action(replaceWith("–")) + WordEnd()
 
 
 class Mdash(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
-        return WordStart() + Keyword("---", identChars="-").setParseAction(replaceWith("—")) + WordEnd()
+        return WordStart() + Keyword("---", ident_chars="-").set_parse_action(replaceWith("—")) + WordEnd()
 
 
 class Ruler(AbstractMarkup):
@@ -30,6 +30,6 @@ class Ruler(AbstractMarkup):
         # add a line break before the dashes.
         return (
             ("\n" | StringStart() | LineBreak(**self.init_kwargs).expr)
-            + Keyword("----", identChars="-").setParseAction(replaceWith("\n----"))
+            + Keyword("----", ident_chars="-").set_parse_action(replaceWith("\n----"))
             + LineEnd()
         )

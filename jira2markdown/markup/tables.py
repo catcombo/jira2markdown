@@ -34,7 +34,7 @@ class Table(AbstractMarkup):
             + "|".join(
                 map(
                     lambda cell: cell.replace("\n", "<br>"),
-                    map(self.markup.transformString, row),
+                    map(self.markup.transform_string, row),
                 ),
             )
             + "|"
@@ -63,12 +63,12 @@ class Table(AbstractMarkup):
 
         ROW = SEP + ZeroOrMore(
             SkipTo(SEP | ROW_BREAK, ignore=IGNORE) + Optional(SEP),
-            stopOn=ROW_BREAK | NL + ~SEP,
+            stop_on=ROW_BREAK | NL + ~SEP,
         )
 
         EMPTY_LINE = Combine("\n" + White(" \t", min=0) + "\n")
         return (
             ((StringStart() + Optional("\n")) ^ Optional(EMPTY_LINE, default="\n"))
-            + OneOrMore(LineStart() + Group(ROW) + NL).setParseAction(self.action)
+            + OneOrMore(LineStart() + Group(ROW) + NL).set_parse_action(self.action)
             + (StringEnd() | Optional(LineEnd(), default="\n"))
         )

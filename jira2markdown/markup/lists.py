@@ -75,7 +75,7 @@ class List(AbstractMarkup):
 
             line_padding = " " * count
             item_padding = " " * (count - self.indent) + self.bullet + " "
-            text = self.markup.transformString(text).splitlines() or [""]
+            text = self.markup.transform_string(text).splitlines() or [""]
 
             result.append(
                 "\n".join([item_padding + line if i == 0 else line_padding + line for i, line in enumerate(text)]),
@@ -97,7 +97,7 @@ class List(AbstractMarkup):
             + Optional(NL),
         )
 
-        return OneOrMore(ROW, stopOn=LIST_BREAK).setParseAction(self.action)
+        return OneOrMore(ROW, stop_on=LIST_BREAK).set_parse_action(self.action)
 
 
 class UnorderedList(List):
