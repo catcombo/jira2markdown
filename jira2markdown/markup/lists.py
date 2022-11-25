@@ -11,6 +11,7 @@ from pyparsing import (
     ParseResults,
     SkipTo,
     StringEnd,
+    Token,
     White,
 )
 
@@ -27,11 +28,10 @@ class ListIndentState:
         self.indent = 0
 
 
-class ListIndent(ParserElement):
-    def __init__(self, indent_state: ListIndentState, tokens: str, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class ListIndent(Token):
+    def __init__(self, indent_state: ListIndentState, tokens: str):
+        super().__init__()
 
-        self.name = "ListIndent"
         self.indent_state = indent_state
         self.tokens = tokens
 
