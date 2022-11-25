@@ -5,6 +5,7 @@ from pyparsing import (
     Char,
     Combine,
     FollowedBy,
+    LineStart,
     Literal,
     Optional,
     ParserElement,
@@ -151,7 +152,7 @@ class Quote(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        return ("\n" | StringStart()) + Literal("bq. ").set_parse_action(replaceWith("> "))
+        return LineStart() + Optional(White()) + Literal("bq. ").set_parse_action(replaceWith("> "))
 
 
 class BlockQuote(AbstractMarkup):

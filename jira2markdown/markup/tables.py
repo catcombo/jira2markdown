@@ -1,5 +1,6 @@
+import re
+
 from pyparsing import (
-    Combine,
     Group,
     LineEnd,
     LineStart,
@@ -8,10 +9,10 @@ from pyparsing import (
     Optional,
     ParserElement,
     ParseResults,
+    Regex,
     SkipTo,
     StringEnd,
     StringStart,
-    White,
     ZeroOrMore,
 )
 
@@ -66,9 +67,9 @@ class Table(AbstractMarkup):
             stop_on=ROW_BREAK | NL + ~SEP,
         )
 
-        EMPTY_LINE = Combine("\n" + White(" \t", min=0) + "\n")
+        EMPTY_LINE = LineStart() + Optional(Regex(r"[ \t]+", flags=re.UNICODE)) + LineEnd()
         return (
-            ((StringStart() + Optional("\n")) ^ Optional(EMPTY_LINE, default="\n"))
+            (StringStart() ^ Optional(EMPTY_LINE, default="\n"))
             + OneOrMore(LineStart() + Group(ROW) + NL).set_parse_action(self.action)
-            + (StringEnd() | Optional(LineEnd(), default="\n"))
+            + (StringEnd() | Optional(EMPTY_LINE, default="\n"))
         )
