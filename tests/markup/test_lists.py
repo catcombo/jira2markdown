@@ -59,7 +59,7 @@ class TestUnorderedList:
     def test_match_start_conditions(self):
         assert convert("* Item") == "- Item"
         assert convert("\n* Item") == "\n- Item"
-        assert convert("  * Item") == r"  \* Item"
+        assert convert("  * Item") == r"- Item"
 
     def test_multiline(self):
         assert (
@@ -166,6 +166,22 @@ Some text
 Some text
 
 - 
+"""
+        )
+
+    def test_list_indent(self):
+        assert (
+            convert(
+                """
+  * One
+      ** Two
+ ** Three
+"""
+            )
+            == """
+- One
+  - Two
+  - Three
 """
         )
 
@@ -281,4 +297,20 @@ Break
 1. 
    1. 
         """
+        )
+
+    def test_list_indent(self):
+        assert (
+            convert(
+                """
+  # One
+      ## Two
+ ## Three
+"""
+            )
+            == """
+1. One
+   1. Two
+   1. Three
+"""
         )

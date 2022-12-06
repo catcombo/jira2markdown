@@ -1,3 +1,5 @@
+import re
+
 from pyparsing import (
     Char,
     Combine,
@@ -9,10 +11,10 @@ from pyparsing import (
     Optional,
     ParserElement,
     ParseResults,
+    Regex,
     SkipTo,
     StringEnd,
     Token,
-    White,
 )
 
 from jira2markdown.markup.advanced import Panel
@@ -87,14 +89,22 @@ class List(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        NL = LineEnd()
-        LIST_BREAK = NL + Optional(White(" \t")) + NL | StringEnd()
+        WHITESPACE = Regex(r"[ \t]+", flags=re.UNICODE)
+        EOL = LineEnd()
+        LIST_BREAK = EOL + Optional(WHITESPACE) + EOL | StringEnd()
         IGNORE = BlockQuote(**self.init_kwargs).expr | Panel(**self.init_kwargs).expr | Color(**self.init_kwargs).expr
-        ROW = LineStart() + Combine(
-            Optional(self.nested_token, default="")
-            + ListIndent(self.indent_state, self.tokens)
-            + SkipTo(NL + Char(self.nested_token + self.tokens) | LIST_BREAK, ignore=IGNORE)
-            + Optional(NL),
+        ROW = (
+            LineStart()
+            + Optional(WHITESPACE).suppress()
+            + Combine(
+                Optional(self.nested_token, default="")
+                + ListIndent(self.indent_state, self.tokens)
+                + SkipTo(
+                    EOL + Optional(WHITESPACE) + Char(self.nested_token + self.tokens) | LIST_BREAK,
+                    ignore=IGNORE,
+                )
+                + Optional(EOL),
+            )
         )
 
         return OneOrMore(ROW, stop_on=LIST_BREAK).set_parse_action(self.action)
