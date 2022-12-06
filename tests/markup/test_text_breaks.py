@@ -33,7 +33,7 @@ class TestRuler:
         assert convert("----") == "\n----"
 
     def test_indent(self):
-        assert convert(" ---- ") == " \n----"
+        assert convert(" ---- ") == "\n----"
 
     def test_word_connections(self):
         assert convert("abc----def") == "abc----def"

@@ -11,6 +11,7 @@ from pyparsing import (
     ParseResults,
     SkipTo,
     StringEnd,
+    Token,
     White,
 )
 
@@ -27,11 +28,10 @@ class ListIndentState:
         self.indent = 0
 
 
-class ListIndent(ParserElement):
-    def __init__(self, indent_state: ListIndentState, tokens: str, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class ListIndent(Token):
+    def __init__(self, indent_state: ListIndentState, tokens: str):
+        super().__init__()
 
-        self.name = "ListIndent"
         self.indent_state = indent_state
         self.tokens = tokens
 
@@ -75,7 +75,7 @@ class List(AbstractMarkup):
 
             line_padding = " " * count
             item_padding = " " * (count - self.indent) + self.bullet + " "
-            text = self.markup.transformString(text).splitlines() or [""]
+            text = self.markup.transform_string(text).splitlines() or [""]
 
             result.append(
                 "\n".join([item_padding + line if i == 0 else line_padding + line for i, line in enumerate(text)]),
@@ -97,7 +97,7 @@ class List(AbstractMarkup):
             + Optional(NL),
         )
 
-        return OneOrMore(ROW, stopOn=LIST_BREAK).setParseAction(self.action)
+        return OneOrMore(ROW, stop_on=LIST_BREAK).set_parse_action(self.action)
 
 
 class UnorderedList(List):

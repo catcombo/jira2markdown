@@ -254,7 +254,7 @@ class TestTableContent:
     def test_basic_markup(self):
         assert (
             convert("| Table *bold header* and {color:red}colored title{color} |")
-            == '|Table **bold header** and <font color="red">colored title</font>|\n|-|\n'
+            == '| Table **bold header** and <font color="red">colored title</font> |\n|-|\n'
         )
 
     def test_cell_image(self):

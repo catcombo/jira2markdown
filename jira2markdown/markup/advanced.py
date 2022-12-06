@@ -25,8 +25,8 @@ class Noformat(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
         return Combine(
-            Literal("{noformat") + ... + Literal("}") + SkipTo("{noformat}").setResultsName("text") + "{noformat}",
-        ).setParseAction(self.action)
+            Literal("{noformat") + ... + Literal("}") + SkipTo("{noformat}").set_results_name("text") + "{noformat}",
+        ).set_parse_action(self.action)
 
 
 class Code(AbstractMarkup):
@@ -40,13 +40,13 @@ class Code(AbstractMarkup):
         return Combine(
             "{code"
             + Optional(
-                ":" + Word(alphanums + "#+").setResultsName("lang") + FollowedBy(Literal("}") | Literal("|")),
+                ":" + Word(alphanums + "#+").set_results_name("lang") + FollowedBy(Literal("}") | Literal("|")),
             )
             + ...
             + "}"
-            + SkipTo("{code}").setResultsName("text")
+            + SkipTo("{code}").set_results_name("text")
             + "{code}",
-        ).setParseAction(self.action)
+        ).set_parse_action(self.action)
 
 
 class Panel(AbstractMarkup):
@@ -58,7 +58,7 @@ class Panel(AbstractMarkup):
         else:
             prefix = ""
 
-        text = self.markup.transformString("\n".join([line.lstrip() for line in tokens.text.strip().splitlines()]))
+        text = self.markup.transform_string("\n".join([line.lstrip() for line in tokens.text.strip().splitlines()]))
         return prefix + "\n".join([f"> {line}" for line in text.splitlines()])
 
     @property
@@ -68,9 +68,9 @@ class Panel(AbstractMarkup):
         return Combine(
             "{panel"
             + Optional(
-                ":" + OneOrMore(Group(PARAM), stopOn="}").setResultsName("params"),
+                ":" + OneOrMore(Group(PARAM), stop_on="}").set_results_name("params"),
             )
             + "}"
-            + SkipTo("{panel}").setResultsName("text")
+            + SkipTo("{panel}").set_results_name("text")
             + "{panel}",
-        ).setParseAction(self.action)
+        ).set_parse_action(self.action)

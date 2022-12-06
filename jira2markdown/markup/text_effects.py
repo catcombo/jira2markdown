@@ -5,6 +5,7 @@ from pyparsing import (
     Char,
     Combine,
     FollowedBy,
+    LineStart,
     Literal,
     Optional,
     ParserElement,
@@ -36,7 +37,7 @@ class QuotedElement(AbstractMarkup):
 
     def action(self, tokens: ParseResults) -> str:
         return (
-            self.QUOTE_CHAR + self.inline_markup.transformString(tokens[0]) + (self.END_QUOTE_CHAR or self.QUOTE_CHAR)
+            self.QUOTE_CHAR + self.inline_markup.transform_string(tokens[0]) + (self.END_QUOTE_CHAR or self.QUOTE_CHAR)
         )
 
     def get_ignore_expr(self) -> ParserElement:
@@ -50,13 +51,13 @@ class QuotedElement(AbstractMarkup):
         ELEMENT = Combine(
             TOKEN
             + (~White() & ~Char(self.TOKEN))
-            + SkipTo(TOKEN, ignore=IGNORE, failOn="\n")
+            + SkipTo(TOKEN, ignore=IGNORE, fail_on="\n")
             + TOKEN
             + FollowedBy(NON_ALPHANUMS | StringEnd()),
         )
 
         return (StringStart() | PrecededBy(NON_ALPHANUMS, retreat=1)) + Combine(
-            ELEMENT.setParseAction(self.action) + Optional(~ELEMENT, default=" "),
+            ELEMENT.set_parse_action(self.action) + Optional(~ELEMENT, default=" "),
         )
 
 
@@ -109,7 +110,7 @@ class Subscript(QuotedElement):
 
 class Color(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        text = self.inline_markup.transformString(tokens.text)
+        text = self.inline_markup.transform_string(tokens.text)
 
         if tokens.red and tokens.green and tokens.blue:
             color = f"#{int(tokens.red):x}{int(tokens.green):x}{int(tokens.blue):x}"
@@ -128,11 +129,11 @@ class Color(AbstractMarkup):
         SEP = "," + Optional(White())
         RGBA = (
             CaselessLiteral("rgba(")
-            + INTENSITY.setResultsName("red")
+            + INTENSITY.set_results_name("red")
             + SEP
-            + INTENSITY.setResultsName("green")
+            + INTENSITY.set_results_name("green")
             + SEP
-            + INTENSITY.setResultsName("blue")
+            + INTENSITY.set_results_name("blue")
             + SEP
             + ALPHA
             + ")"
@@ -140,10 +141,10 @@ class Color(AbstractMarkup):
 
         COLOR = Word("#", hexnums) ^ Word(alphas) ^ RGBA
         expr = Combine(
-            "{color:" + COLOR.setResultsName("color") + "}" + SkipTo("{color}").setResultsName("text") + "{color}",
+            "{color:" + COLOR.set_results_name("color") + "}" + SkipTo("{color}").set_results_name("text") + "{color}",
         )
 
-        return expr.setParseAction(self.action)
+        return expr.set_parse_action(self.action)
 
 
 class Quote(AbstractMarkup):
@@ -151,17 +152,17 @@ class Quote(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        return ("\n" | StringStart()) + Literal("bq. ").setParseAction(replaceWith("> "))
+        return LineStart() + Optional(White()) + Literal("bq. ").set_parse_action(replaceWith("> "))
 
 
 class BlockQuote(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        text = self.markup.transformString("\n".join([line.lstrip() for line in tokens[0].strip().splitlines()]))
+        text = self.markup.transform_string("\n".join([line.lstrip() for line in tokens[0].strip().splitlines()]))
         return "\n".join([f"> {line}" for line in text.splitlines()])
 
     @property
     def expr(self) -> ParserElement:
-        return QuotedString("{quote}", multiline=True).setParseAction(self.action)
+        return QuotedString("{quote}", multiline=True).set_parse_action(self.action)
 
 
 class Monospaced(AbstractMarkup):
@@ -170,7 +171,7 @@ class Monospaced(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        return QuotedString("{{", endQuoteChar="}}").setParseAction(self.action)
+        return QuotedString("{{", end_quote_char="}}").set_parse_action(self.action)
 
 
 class EscSpecialChars(AbstractMarkup):
@@ -180,4 +181,4 @@ class EscSpecialChars(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        return Literal("*").setParseAction(replaceWith(r"\*"))
+        return Literal("*").set_parse_action(replaceWith(r"\*"))

@@ -24,8 +24,8 @@ class Image(AbstractMarkup):
     def expr(self) -> ParserElement:
         return (StringStart() | PrecededBy(Regex(r"\W", flags=re.UNICODE), retreat=1)) + Combine(
             "!"
-            + Word(printables + " ", min=3, excludeChars="|!").setResultsName("url")
+            + Word(printables + " ", min=3, exclude_chars="|!").set_results_name("url")
             + Optional("|")
-            + SkipTo("!", failOn="\n")
+            + SkipTo("!", fail_on="\n")
             + "!",
-        ).setParseAction(self.action)
+        ).set_parse_action(self.action)

@@ -23,7 +23,7 @@ from jira2markdown.markup.base import AbstractMarkup
 
 class MailTo(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        alias = self.markup.transformString(getattr(tokens, "alias", ""))
+        alias = self.markup.transform_string(getattr(tokens, "alias", ""))
         email = tokens.email
 
         if (alias == email) or (len(alias.strip()) == 0):
@@ -35,26 +35,26 @@ class MailTo(AbstractMarkup):
     def expr(self) -> ParserElement:
         return Combine(
             "["
-            + Optional(SkipTo("|", failOn="]").setResultsName("alias") + "|")
+            + Optional(SkipTo("|", fail_on="]").set_results_name("alias") + "|")
             + "mailto:"
-            + Word(alphanums + "@.-_").setResultsName("email")
+            + Word(alphanums + "@.-_").set_results_name("email")
             + "]",
-        ).setParseAction(self.action)
+        ).set_parse_action(self.action)
 
 
 class Link(AbstractMarkup):
     URL_PREFIXES = ["http", "ftp"]
 
     def action(self, tokens: ParseResults) -> str:
-        alias = self.markup.transformString(getattr(tokens, "alias", ""))
+        alias = self.markup.transform_string(getattr(tokens, "alias", ""))
         url = tokens.url
 
         if url.lower().startswith("www."):
             url = f"https://{url}"
 
         if not any(map(url.lower().startswith, self.URL_PREFIXES)):
-            url = self.markup.transformString(url)
-            return fr"[{alias}\|{url}]" if alias else f"[{url}]"
+            url = self.markup.transform_string(url)
+            return rf"[{alias}\|{url}]" if alias else f"[{url}]"
 
         return f"[{alias}]({url})" if len(alias) > 0 else f"<{url}>"
 
@@ -62,10 +62,10 @@ class Link(AbstractMarkup):
     def expr(self) -> ParserElement:
         return Combine(
             "["
-            + Optional(SkipTo("|", failOn="]").setResultsName("alias") + "|")
-            + SkipTo("]").setResultsName("url")
+            + Optional(SkipTo("|", fail_on="]").set_results_name("alias") + "|")
+            + SkipTo("]").set_results_name("url")
             + "]",
-        ).setParseAction(self.action)
+        ).set_parse_action(self.action)
 
 
 class Attachment(AbstractMarkup):
@@ -74,7 +74,7 @@ class Attachment(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        return Combine("[^" + SkipTo("]").setResultsName("filename") + "]").setParseAction(self.action)
+        return Combine("[^" + SkipTo("]").set_results_name("filename") + "]").set_parse_action(self.action)
 
 
 class Mention(AbstractMarkup):
@@ -87,16 +87,19 @@ class Mention(AbstractMarkup):
         MENTION = Combine(
             "["
             + Optional(
-                SkipTo("|", failOn="]") + Suppress("|"),
+                SkipTo("|", fail_on="]") + Suppress("|"),
                 default="",
             )
             + "~"
             + Optional(CaselessLiteral("accountid:"))
-            + Word(alphanums + ":-").setResultsName("accountid")
+            + Word(alphanums + ":-").set_results_name("accountid")
             + "]",
         )
         return (
             (StringStart() | Optional(PrecededBy(White(), retreat=1), default=" "))
-            + MENTION.setParseAction(self.action)
-            + (StringEnd() | Optional(FollowedBy(White() | Char(punctuation, excludeChars="[") | MENTION), default=" "))
+            + MENTION.set_parse_action(self.action)
+            + (
+                StringEnd()
+                | Optional(FollowedBy(White() | Char(punctuation, exclude_chars="[") | MENTION), default=" ")
+            )
         )
