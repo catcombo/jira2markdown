@@ -489,6 +489,7 @@ class TestLink:
         assert (
             convert("[+box@example.com+|mailto:box@example.com]") == "[<u>box@example.com</u>](mailto:box@example.com)"
         )
+        assert convert("[box+tag@example.com|mailto:box+tag@example.com]") == "<box+tag@example.com>"
 
     def test_text_markup(self):
         assert convert("[Text in -square- brackets]") == "[Text in ~~square~~ brackets]"

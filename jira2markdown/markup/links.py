@@ -37,7 +37,7 @@ class MailTo(AbstractMarkup):
             "["
             + Optional(SkipTo("|", fail_on="]").set_results_name("alias") + "|")
             + "mailto:"
-            + Word(alphanums + "@.-_").set_results_name("email")
+            + Word(alphanums + "@.-_+").set_results_name("email")
             + "]",
         ).set_parse_action(self.action)
 
