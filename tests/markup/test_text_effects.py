@@ -214,12 +214,14 @@ class TestQuote:
         assert (
             convert(
                 """
+Preceding line
 bq. First quote
 bq. Second quote
 Next line
 """
             )
             == """
+Preceding line
 > First quote
 > Second quote
 
