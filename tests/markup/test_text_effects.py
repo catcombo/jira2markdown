@@ -210,6 +210,23 @@ class TestQuote:
         assert convert("  bq. Some quote") == "  > Some quote"
         assert convert("text  bq. Some quote") == "text  bq. Some quote"
 
+    def test_adjacent_text(self):
+        assert (
+            convert(
+                """
+bq. First quote
+bq. Second quote
+Next line
+"""
+            )
+            == """
+> First quote
+> Second quote
+
+Next line
+"""
+        )
+
 
 class TestBlockQuote:
     def test_basic_conversion(self):
