@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jira2markdown"
-version = "0.3.2"
+version = "0.3.3"
 description = "Convert text from JIRA markup to Markdown using parsing expression grammars"
 authors = ["Evgeniy Krysanov <evgeniy.krysanov@gmail.com>"]
 readme = "README.md"
