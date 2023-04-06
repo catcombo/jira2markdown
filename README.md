@@ -214,6 +214,20 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 ```
 </td>
 </tr>
+<tr>
+<td>
+
+```
+!image.jpg|width=300, height=200!
+```
+</td>
+<td>
+
+```
+<img src="image.jpg" width="300" height="200" />
+```
+</td>
+</tr>
 </table>
 
 ## Tables
