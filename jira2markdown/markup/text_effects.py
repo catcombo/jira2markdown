@@ -5,8 +5,10 @@ from pyparsing import (
     Char,
     Combine,
     FollowedBy,
+    LineEnd,
     LineStart,
     Literal,
+    OneOrMore,
     Optional,
     ParserElement,
     ParseResults,
@@ -152,9 +154,21 @@ class Color(AbstractMarkup):
 class Quote(AbstractMarkup):
     is_inline_element = False
 
+    def action(self, tokens: ParseResults) -> str:
+        return self.inline_markup.transform_string(tokens.text)
+
     @property
     def expr(self) -> ParserElement:
-        return LineStart() + Optional(White()) + Literal("bq. ").set_parse_action(replaceWith("> "))
+        NL = LineEnd()
+        EMPTY_LINE = LineStart() + Optional(Regex(r"[ \t]+", flags=re.UNICODE)) + NL
+        ROW = (
+            LineStart()
+            + Optional(White())
+            + Literal("bq. ").set_parse_action(replaceWith("> "))
+            + SkipTo(NL | StringEnd()).set_results_name("text").set_parse_action(self.action)
+            + NL
+        )
+        return OneOrMore(ROW) + (StringEnd() | Optional(EMPTY_LINE, default="\n"))
 
 
 class BlockQuote(AbstractMarkup):
