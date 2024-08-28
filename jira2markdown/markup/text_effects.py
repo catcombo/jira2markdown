@@ -84,8 +84,8 @@ class Strikethrough(QuotedElement):
 
 class Underline(QuotedElement):
     TOKEN = "+"
-    QUOTE_CHAR = "<u>"
-    END_QUOTE_CHAR = "</u>"
+    QUOTE_CHAR = "*"
+    END_QUOTE_CHAR = "*"
 
 
 class InlineQuote(QuotedElement):

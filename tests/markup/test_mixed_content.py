@@ -50,11 +50,11 @@ class TestRecursiveContent:
     def test_underline_color(self):
         assert (
             convert("+text {color:blue}+text inside+{color} outside+")
-            == '<u>text <font color="blue"><u>text inside</u></font> outside</u>'
+            == '*text <font color="blue">*text inside*</font> outside*'
         )
         assert (
             convert("+text {color:blue}contains+ token{color} outside+")
-            == '<u>text <font color="blue">contains+ token</font> outside</u>'
+            == '*text <font color="blue">contains+ token</font> outside*'
         )
 
     def test_inlinequote_color(self):
@@ -100,7 +100,7 @@ class TestRecursiveContent:
         ("headings", "h2. %s", "## %s"),
         ("bold", "*%s*", "**%s**"),
         ("strikethrough", "-%s-", "~~%s~~"),
-        ("underline", "+%s+", "<u>%s</u>"),
+        ("underline", "+%s+", "*%s*"),
         ("inlinequote", "??%s??", "<q>%s</q>"),
         ("superscript", "^%s^", "<sup>%s</sup>"),
         ("subscript", "~%s~", "<sub>%s</sub>"),
@@ -487,7 +487,7 @@ Some text
 class TestLink:
     def test_alias_markup(self):
         assert (
-            convert("[+box@example.com+|mailto:box@example.com]") == "[<u>box@example.com</u>](mailto:box@example.com)"
+            convert("[+box@example.com+|mailto:box@example.com]") == "[*box@example.com*](mailto:box@example.com)"
         )
         assert convert("[box+tag@example.com|mailto:box+tag@example.com]") == "<box+tag@example.com>"
 

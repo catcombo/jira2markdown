@@ -66,11 +66,11 @@ class TestStrikethrough:
 
 class TestUnderline:
     def test_basic_conversion(self):
-        assert convert("inside +some long+ text") == "inside <u>some long</u> text"
+        assert convert("inside +some long+ text") == "inside *some long* text"
 
     def test_line_endings(self):
-        assert convert("+start string end+") == "<u>start string end</u>"
-        assert convert("\n+start line end+\n") == "\n<u>start line end</u>\n"
+        assert convert("+start string end+") == "*start string end*"
+        assert convert("\n+start line end+\n") == "\n*start line end*\n"
 
     def test_match_start_conditions(self):
         assert convert("no + space after start+") == "no + space after start+"
@@ -79,7 +79,7 @@ class TestUnderline:
     def test_match_end_conditions(self):
         assert convert("+text +") == "+text +"
         assert convert("+word+connector") == "+word+connector"
-        assert convert("+skip +spacing + char+") == "<u>skip +spacing + char</u>"
+        assert convert("+skip +spacing + char+") == "*skip +spacing + char*"
 
     def test_multiline(self):
         assert convert("+multiline\nunderline+") == "+multiline\nunderline+"
