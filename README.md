@@ -65,7 +65,7 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 |`_emphasis_`|Not converted (the same syntax)|
 |`??citation??`|`<q>citation</q>`|
 |`-deleted-`|`~~deleted~~`|
-|`+inserted+`|`inserted`|
+|`+inserted+`|`*inserted*`|
 |`^superscript^`|`<sup>superscript</sup>`|
 |`~subscript~`|`<sub>subscript</sub>`|
 |`{{monospaced}}`|`` `monospaced` ``|
