@@ -17,4 +17,5 @@ def convert(text: str, usernames: Optional[dict] = None, elements: Optional[Mark
     inline_markup << elements.expr(inline_markup, markup, usernames, filter(lambda e: e.is_inline_element, elements))
     markup << elements.expr(inline_markup, markup, usernames, elements)
 
+    text = text.replace("\r\n", "\n")
     return markup.transform_string(text)
