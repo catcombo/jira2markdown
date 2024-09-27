@@ -170,7 +170,7 @@ class TestInlineElements:
     [
         ("blockquote", "{quote}%s{quote}", ["> %s", "> %s"]),
         ("panel", "{panel}%s{panel}", ["> %s", "> %s"]),
-        ("table", "|%s\n|row", ["|%s|\n|-|\n|row|\n"]),
+        ("table", "|%s\n|row", ["|%s|\n|---|\n|row|\n"]),
         ("unordered_list", "* %s", ["- %s", "  %s"]),
         ("ordered_list", "# %s", ["1. %s", "   %s"]),
     ],
@@ -196,7 +196,7 @@ class TestBlockElements:
         if token == "table":
             pytest.skip(f"Skip nested tests for {token} token")
         else:
-            assert convert(test_input % "|Table") == self.render_expected(expected, "|Table|\n|-|\n")
+            assert convert(test_input % "|Table") == self.render_expected(expected, "|Table|\n|---|\n")
 
     def test_list(self, token, test_input, expected):
         if token in ["unordered_list", "ordered_list"]:
@@ -254,21 +254,21 @@ class TestTableContent:
     def test_basic_markup(self):
         assert (
             convert("| Table *bold header* and {color:red}colored title{color} |")
-            == '| Table **bold header** and <font color="red">colored title</font> |\n|-|\n'
+            == '| Table **bold header** and <font color="red">colored title</font> |\n|---|\n'
         )
 
     def test_cell_image(self):
-        assert convert("|!image.png|width=300!") == '|<img src="image.png" width="300" />|\n|-|\n'
+        assert convert("|!image.png|width=300!") == '|<img src="image.png" width="300" />|\n|---|\n'
 
     def test_cell_link(self):
-        assert convert("|[link|http://example.com]|") == "|[link](http://example.com)|\n|-|\n"
+        assert convert("|[link|http://example.com]|") == "|[link](http://example.com)|\n|---|\n"
 
     def test_cell_mailto(self):
-        assert convert("|[mailto:user@example.com]|") == "|<user@example.com>|\n|-|\n"
-        assert convert("|[-alias-|mailto:user@example.com]|") == "|[~~alias~~](mailto:user@example.com)|\n|-|\n"
+        assert convert("|[mailto:user@example.com]|") == "|<user@example.com>|\n|---|\n"
+        assert convert("|[-alias-|mailto:user@example.com]|") == "|[~~alias~~](mailto:user@example.com)|\n|---|\n"
 
     def test_cell_mention(self):
-        assert convert("|[user|~uuid]|", {"uuid": "elliot"}) == "|@elliot|\n|-|\n"
+        assert convert("|[user|~uuid]|", {"uuid": "elliot"}) == "|@elliot|\n|---|\n"
 
 
 class TestPanelContent:
