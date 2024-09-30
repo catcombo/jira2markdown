@@ -251,7 +251,7 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 
 ```
 |heading 1|heading 2|heading 3|
-|-|-|-|
+|---|---|---|
 |col A1|col A2|col A3|
 |col B1|col B2|col B3|
 ```

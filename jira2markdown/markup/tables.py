@@ -46,7 +46,7 @@ class Table(AbstractMarkup):
         output[0] += "|" * (max_columns_count - len(lines[0]))
 
         # Insert header delimiter after the first row
-        output.insert(1, "|" + "-|" * max(max_columns_count, 1))
+        output.insert(1, "|" + "---|" * max(max_columns_count, 1))
 
         return "\n".join(output) + "\n"
 
