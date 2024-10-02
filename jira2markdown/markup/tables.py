@@ -2,7 +2,6 @@ import re
 
 from pyparsing import (
     Group,
-    LineEnd,
     LineStart,
     Literal,
     OneOrMore,
@@ -19,6 +18,7 @@ from pyparsing import (
 from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.images import Image
 from jira2markdown.markup.links import Link, MailTo, Mention
+from jira2markdown.tokens import UniversalLineEnd
 
 
 class Table(AbstractMarkup):
@@ -52,7 +52,7 @@ class Table(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        NL = LineEnd().suppress()
+        NL = UniversalLineEnd().suppress()
         SEP = (Literal("||") | Literal("|")).suppress()
         ROW_BREAK = NL + SEP | NL + NL | StringEnd()
         IGNORE = (
@@ -67,7 +67,7 @@ class Table(AbstractMarkup):
             stop_on=ROW_BREAK | NL + ~SEP,
         )
 
-        EMPTY_LINE = LineStart() + Optional(Regex(r"[ \t]+", flags=re.UNICODE)) + LineEnd()
+        EMPTY_LINE = LineStart() + Optional(Regex(r"[ \t]+", flags=re.UNICODE)) + UniversalLineEnd()
         return (
             (StringStart() ^ Optional(EMPTY_LINE, default="\n"))
             + OneOrMore(LineStart() + Group(ROW) + NL).set_parse_action(self.action)

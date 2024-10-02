@@ -5,7 +5,6 @@ from pyparsing import (
     Char,
     Combine,
     FollowedBy,
-    LineEnd,
     LineStart,
     Literal,
     OneOrMore,
@@ -30,6 +29,7 @@ from pyparsing import (
 from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.images import Image
 from jira2markdown.markup.links import Attachment, Link, Mention
+from jira2markdown.tokens import UniversalLineEnd
 
 
 class QuotedElement(AbstractMarkup):
@@ -159,7 +159,7 @@ class Quote(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        NL = LineEnd()
+        NL = UniversalLineEnd()
         EMPTY_LINE = LineStart() + Optional(Regex(r"[ \t]+", flags=re.UNICODE)) + NL
         ROW = (
             LineStart()

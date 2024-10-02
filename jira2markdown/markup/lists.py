@@ -3,7 +3,6 @@ import re
 from pyparsing import (
     Char,
     Combine,
-    LineEnd,
     LineStart,
     Literal,
     MatchFirst,
@@ -20,6 +19,7 @@ from pyparsing import (
 from jira2markdown.markup.advanced import Panel
 from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.text_effects import BlockQuote, Color
+from jira2markdown.tokens import UniversalLineEnd
 
 
 class ListIndentState:
@@ -90,7 +90,7 @@ class List(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
         WHITESPACE = Regex(r"[ \t]+", flags=re.UNICODE)
-        EOL = LineEnd()
+        EOL = UniversalLineEnd()
         LIST_BREAK = EOL + Optional(WHITESPACE) + EOL | StringEnd()
         IGNORE = BlockQuote(**self.init_kwargs).expr | Panel(**self.init_kwargs).expr | Color(**self.init_kwargs).expr
         ROW = (

@@ -1,6 +1,7 @@
-from pyparsing import Keyword, LineEnd, LineStart, Optional, ParserElement, White, WordEnd, WordStart, replaceWith
+from pyparsing import Keyword, LineStart, Optional, ParserElement, White, WordEnd, WordStart, replaceWith
 
 from jira2markdown.markup.base import AbstractMarkup
+from jira2markdown.tokens import UniversalLineEnd
 
 
 class LineBreak(AbstractMarkup):
@@ -33,5 +34,5 @@ class Ruler(AbstractMarkup):
             + (Optional(White()) + Keyword("----", ident_chars="-") + Optional(White())).set_parse_action(
                 replaceWith("\n----"),
             )
-            + LineEnd()
+            + UniversalLineEnd()
         )
