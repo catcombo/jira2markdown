@@ -174,7 +174,7 @@ class Quote(AbstractMarkup):
 class BlockQuote(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
         text = self.markup.transform_string(
-            "".join([line.lstrip() for line in tokens[0].strip().splitlines(keepends=True)])
+            "".join([line.lstrip() for line in tokens[0].strip().splitlines(keepends=True)]),
         )
         return "".join([f"> {line}" for line in text.splitlines(keepends=True)])
 

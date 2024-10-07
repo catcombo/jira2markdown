@@ -59,7 +59,7 @@ class Panel(AbstractMarkup):
             prefix = ""
 
         text = self.markup.transform_string(
-            "".join([line.lstrip() for line in tokens.text.strip().splitlines(keepends=True)])
+            "".join([line.lstrip() for line in tokens.text.strip().splitlines(keepends=True)]),
         )
         return prefix + "".join([f"> {line}" for line in text.splitlines(keepends=True)])
 
