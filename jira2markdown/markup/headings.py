@@ -1,6 +1,7 @@
-from pyparsing import Combine, LineEnd, LineStart, Optional, ParserElement, ParseResults, SkipTo, StringEnd, White, Word
+from pyparsing import Combine, LineStart, Optional, ParserElement, ParseResults, SkipTo, StringEnd, White, Word
 
 from jira2markdown.markup.base import AbstractMarkup
+from jira2markdown.tokens import UniversalLineEnd
 
 
 class Headings(AbstractMarkup):
@@ -17,6 +18,6 @@ class Headings(AbstractMarkup):
             + Combine(
                 Word("h", "123456", exact=2).set_results_name("level")
                 + ". "
-                + SkipTo(LineEnd() | StringEnd()).set_results_name("text"),
+                + SkipTo(UniversalLineEnd() | StringEnd()).set_results_name("text"),
             ).set_parse_action(self.action)
         )

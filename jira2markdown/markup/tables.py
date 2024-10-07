@@ -2,7 +2,6 @@ import re
 
 from pyparsing import (
     Group,
-    LineEnd,
     LineStart,
     Literal,
     OneOrMore,
@@ -19,14 +18,17 @@ from pyparsing import (
 from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.images import Image
 from jira2markdown.markup.links import Link, MailTo, Mention
+from jira2markdown.tokens import UniversalLineEnd
 
 
 class Table(AbstractMarkup):
     is_inline_element = False
 
     def action(self, tokens: ParseResults) -> str:
-        lines = [line for line in tokens if len(line) > 0]
-        max_columns_count = max(len(row) for row in tokens)
+        eol = tokens[0].eol or "\n"
+        stripped_tokens = [row[:-1] if row[-1] == eol else row for row in tokens]
+        max_columns_count = max(len(row) for row in stripped_tokens)
+        lines = [row for row in stripped_tokens if len(row) > 0]
 
         # Converts multiline text to one line,
         # because markdown doesn't support multiline text in table cells
@@ -34,7 +36,7 @@ class Table(AbstractMarkup):
             "|"
             + "|".join(
                 map(
-                    lambda cell: cell.replace("\n", "<br>"),
+                    lambda cell: cell.replace(eol, "<br>"),
                     map(self.markup.transform_string, row),
                 ),
             )
@@ -48,11 +50,11 @@ class Table(AbstractMarkup):
         # Insert header delimiter after the first row
         output.insert(1, "|" + "---|" * max(max_columns_count, 1))
 
-        return "\n".join(output) + "\n"
+        return eol.join(output) + eol
 
     @property
     def expr(self) -> ParserElement:
-        NL = LineEnd().suppress()
+        NL = UniversalLineEnd().suppress()
         SEP = (Literal("||") | Literal("|")).suppress()
         ROW_BREAK = NL + SEP | NL + NL | StringEnd()
         IGNORE = (
@@ -62,14 +64,18 @@ class Table(AbstractMarkup):
             | Mention(**self.init_kwargs).expr
         )
 
-        ROW = SEP + ZeroOrMore(
-            SkipTo(SEP | ROW_BREAK, ignore=IGNORE) + Optional(SEP),
-            stop_on=ROW_BREAK | NL + ~SEP,
+        ROW = (
+            SEP
+            + ZeroOrMore(
+                SkipTo(SEP | ROW_BREAK, ignore=IGNORE) + Optional(SEP),
+                stop_on=ROW_BREAK | NL + ~SEP,
+            )
+            + UniversalLineEnd().set_results_name("eol")
         )
 
-        EMPTY_LINE = LineStart() + Optional(Regex(r"[ \t]+", flags=re.UNICODE)) + LineEnd()
+        EMPTY_LINE = LineStart() + Optional(Regex(r"[ \t]+", flags=re.UNICODE)) + UniversalLineEnd()
         return (
             (StringStart() ^ Optional(EMPTY_LINE, default="\n"))
-            + OneOrMore(LineStart() + Group(ROW) + NL).set_parse_action(self.action)
+            + OneOrMore(LineStart() + Group(ROW)).set_parse_action(self.action)
             + (StringEnd() | Optional(EMPTY_LINE, default="\n"))
         )

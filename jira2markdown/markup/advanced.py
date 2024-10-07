@@ -58,8 +58,10 @@ class Panel(AbstractMarkup):
         else:
             prefix = ""
 
-        text = self.markup.transform_string("\n".join([line.lstrip() for line in tokens.text.strip().splitlines()]))
-        return prefix + "\n".join([f"> {line}" for line in text.splitlines()])
+        text = self.markup.transform_string(
+            "".join([line.lstrip() for line in tokens.text.strip().splitlines(keepends=True)]),
+        )
+        return prefix + "".join([f"> {line}" for line in text.splitlines(keepends=True)])
 
     @property
     def expr(self) -> ParserElement:

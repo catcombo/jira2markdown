@@ -139,3 +139,19 @@ text after table
         assert convert("  \n|header") == "  \n|header|\n|---|\n"
         assert convert("  \n \t \n|header") == "  \n \t \n|header|\n|---|\n"
         assert convert("  \n text \n|header") == "  \n text \n\n|header|\n|---|\n"
+
+    def test_windows_line_breaks(self):
+        assert convert(
+            "text before table:\r\n\r\n"
+            "||header 1||header 2||header 3||\r\n"
+            "|cell 1-1|cell 1-2|cell 1-3|\r\n"
+            "|cell 2-1|cell 2-2|cell 2-3|\r\n\r\n"
+            "text after table"
+        ) == (
+            "text before table:\r\n\r\n"
+            "|header 1|header 2|header 3|\r\n"
+            "|---|---|---|\r\n"
+            "|cell 1-1|cell 1-2|cell 1-3|\r\n"
+            "|cell 2-1|cell 2-2|cell 2-3|\r\n\r\n"
+            "text after table"
+        )
