@@ -23,6 +23,9 @@ class TestBold:
     def test_multiline(self):
         assert convert("*multiline\nbold*") == "\\*multiline\nbold\\*"
 
+    def test_multiline_windows_line_breaks(self):
+        assert convert("*multiline\r\nbold*") == "\\*multiline\r\nbold\\*"
+
     def test_single_token(self):
         assert convert("single *char") == r"single \*char"
 
@@ -229,6 +232,12 @@ Next line
 """
         )
 
+    def test_windows_line_breaks(self):
+        assert (
+            convert("Preceding line\r\nbq. First quote\r\nbq. Second quote\r\nNext line")
+            == "Preceding line\r\n> First quote\r\n> Second quote\r\n\nNext line"
+        )
+
 
 class TestBlockQuote:
     def test_basic_conversion(self):
@@ -245,6 +254,12 @@ class TestBlockQuote:
 > here is quotable
 > content to be quoted
 """
+        )
+
+    def test_windows_line_breaks(self):
+        assert (
+            convert("\r\n{quote}\r\nhere is quotable\r\ncontent to be quoted\r\n{quote}\r\n")
+            == "\r\n> here is quotable\r\n> content to be quoted\r\n"
         )
 
 

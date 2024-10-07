@@ -12,3 +12,9 @@ class TestHeadings:
     def test_match_start_conditions(self):
         assert convert("  h2. Title") == "  ## Title"
         assert convert(" A  h2. Title") == " A  h2. Title"
+
+    def test_windows_line_breaks(self):
+        assert (
+            convert("Line before heading\r\nh1. Title text\r\nLine after heading")
+            == "Line before heading\r\n# Title text\r\nLine after heading"
+        )

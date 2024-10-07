@@ -53,7 +53,7 @@ class QuotedElement(AbstractMarkup):
         ELEMENT = Combine(
             TOKEN
             + (~White() & ~Char(self.TOKEN))
-            + SkipTo(TOKEN, ignore=IGNORE, fail_on="\n")
+            + SkipTo(TOKEN, ignore=IGNORE, fail_on=UniversalLineEnd())
             + TOKEN
             + FollowedBy(NON_ALPHANUMS | StringEnd()),
         )
@@ -173,8 +173,10 @@ class Quote(AbstractMarkup):
 
 class BlockQuote(AbstractMarkup):
     def action(self, tokens: ParseResults) -> str:
-        text = self.markup.transform_string("\n".join([line.lstrip() for line in tokens[0].strip().splitlines()]))
-        return "\n".join([f"> {line}" for line in text.splitlines()])
+        text = self.markup.transform_string(
+            "".join([line.lstrip() for line in tokens[0].strip().splitlines(keepends=True)])
+        )
+        return "".join([f"> {line}" for line in text.splitlines(keepends=True)])
 
     @property
     def expr(self) -> ParserElement:

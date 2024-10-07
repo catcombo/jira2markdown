@@ -63,7 +63,7 @@ class List(AbstractMarkup):
         self.indent_state = ListIndentState()
 
     def action(self, tokens: ParseResults) -> str:
-        result = []
+        result = ""
 
         for line in tokens:
             bullets, text = line.split(" ", maxsplit=1)
@@ -77,15 +77,12 @@ class List(AbstractMarkup):
 
             line_padding = " " * count
             item_padding = " " * (count - self.indent) + self.bullet + " "
-            text = self.markup.transform_string(text).splitlines() or [""]
+            text = self.markup.transform_string(text).splitlines(keepends=True) or [""]
 
-            result.append(
-                "\n".join([item_padding + line if i == 0 else line_padding + line for i, line in enumerate(text)]),
-            )
+            result += "".join([item_padding + line if i == 0 else line_padding + line for i, line in enumerate(text)])
 
         self.indent_state.reset()
-        text_end = "\n" if (tokens[-1][-1] == "\n") else ""
-        return "\n".join(result) + text_end
+        return result
 
     @property
     def expr(self) -> ParserElement:
@@ -118,7 +115,7 @@ class UnorderedList(List):
         result = super().action(tokens)
         first_line = (result.splitlines() or [""])[0].strip()
 
-        # Text with dashed below it turns into a heading. To prevent this
+        # Text with dashes below it turns into a heading. To prevent this
         # add a line break before an empty list.
         if first_line == "-":
             return "\n" + result

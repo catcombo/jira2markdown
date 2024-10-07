@@ -9,7 +9,7 @@ class UniversalLineEnd(LineEnd):
     def parseImpl(self, instring, loc, do_actions=True) -> ParseImplReturnType:
         if loc < len(instring):
             if instring.startswith("\r\n", loc):
-                return loc + 2, "\n"
+                return loc + 2, "\r\n"
             elif instring[loc] in ("\n", "\r"):
                 return loc + 1, "\n"
             else:

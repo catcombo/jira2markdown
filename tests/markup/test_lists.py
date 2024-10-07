@@ -318,5 +318,5 @@ Break
     def test_windows_line_breaks(self):
         assert (
             convert("Line before list\r\n * Bulleted item 1\r\n * Bulleted item 2\r\n\r\nLine after list")
-            == "Line before list\n- Bulleted item 1\n- Bulleted item 2\n\nLine after list"
+            == "Line before list\r\n- Bulleted item 1\r\n- Bulleted item 2\r\n\r\nLine after list"
         )

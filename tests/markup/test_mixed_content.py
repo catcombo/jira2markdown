@@ -182,8 +182,8 @@ class TestBlockElements:
             return expected[0] % text
 
         first_line, next_line = expected
-        return "\n".join(
-            [first_line % line if i == 0 else next_line % line for i, line in enumerate(text.splitlines())]
+        return "".join(
+            [first_line % line if i == 0 else next_line % line for i, line in enumerate(text.splitlines(keepends=True))]
         )
 
     def test_headings(self, token, test_input, expected):
