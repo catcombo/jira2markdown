@@ -258,7 +258,7 @@ class TestTableContent:
         )
 
     def test_cell_image(self):
-        assert convert("|!image.png|width=300!") == '|<img src="image.png" width="300" />|\n|---|\n'
+        assert convert("|!image.png|width=300!") == '|![image.png](image.png){width="300"}|\n|---|\n'
 
     def test_cell_link(self):
         assert convert("|[link|http://example.com]|") == "|[link](http://example.com)|\n|---|\n"
@@ -285,7 +285,7 @@ line with !image.png|width=300!
             == """
 > **My Title**
 > a block of text surrounded with a **panel**
-> line with <img src="image.png" width="300" />
+> line with ![image.png](image.png){width="300"}
 """
         )
 
