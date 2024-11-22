@@ -21,6 +21,6 @@ class TestImage:
         assert convert("!http://example.\ncom/image.png!") == "!http://example.\ncom/image.png!"
 
     def test_image_attributes(self):
-        assert convert("!image.jpg|width=300!") == '<img src="image.jpg" width="300" />'
-        assert convert("!image.jpg| WIDTH  =  300 , HEIGHT=200!") == '<img src="image.jpg" width="300" height="200" />'
+        assert convert("!image.jpg|width=300!") == "![image.jpg](image.jpg){width=300}"
+        assert convert("!image.jpg| WIDTH  =  300 , HEIGHT=200!") == "![image.jpg](image.jpg){width=300 height=200}"
         assert convert("!image.jpg|align=right, vspace=4!") == "![image.jpg](image.jpg)"
