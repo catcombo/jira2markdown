@@ -32,7 +32,7 @@ class Image(AbstractMarkup):
             if name in self.ALLOWED_ATTRS
         )
         if attrs_str:
-            return f'<img src="{tokens.url}" {attrs_str} />'
+            return f"![{tokens.url}]({tokens.url})" + "{" + attrs_str + "}"
         else:
             return f"![{tokens.url}]({tokens.url})"
 
