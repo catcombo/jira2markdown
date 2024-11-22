@@ -224,7 +224,7 @@ convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespea
 <td>
 
 ```
-![image.jpg](image.jpg){width="300" height="200"}
+![image.jpg](image.jpg){width="300" height="200"} 
 ```
 </td>
 </tr>
