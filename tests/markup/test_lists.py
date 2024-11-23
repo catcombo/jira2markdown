@@ -1,3 +1,4 @@
+# ruff: noqa: W291
 from jira2markdown import convert
 
 
@@ -11,7 +12,7 @@ class TestUnorderedList:
 ** indented
 ** bullets
 * points
-        """
+        """,
             )
             == """
 - some
@@ -29,7 +30,7 @@ class TestUnorderedList:
 -- indented
 -- bullets
 - points
-        """
+        """,
             )
             == """
 - some
@@ -47,7 +48,7 @@ class TestUnorderedList:
 #* nested
 #** bullet
 #** list
-        """
+        """,
             )
             == """
    - nested
@@ -70,7 +71,7 @@ Line
 Next
 
 Break
-"""
+""",
             )
             == """
 - Item
@@ -93,7 +94,7 @@ Break
 
 * Last
 ** One
-"""
+""",
             )
             == r"""
 - First
@@ -111,7 +112,7 @@ Break
                 """
 -- One
 --- Two
-"""
+""",
             )
             == """
 – One
@@ -126,7 +127,7 @@ Break
 * one
 ** two
 **** four
-"""
+""",
             )
             == r"""
 - one
@@ -143,7 +144,7 @@ Break
 ** 
 - 
 -- 
-        """
+        """,
             )
             == """
 
@@ -160,7 +161,7 @@ Break
                 """
 Some text
 * 
-"""
+""",
             )
             == """
 Some text
@@ -176,7 +177,7 @@ Some text
   * One
       ** Two
  ** Three
-"""
+""",
             )
             == """
 - One
@@ -196,7 +197,7 @@ class TestOrderedList:
 # list
 ## indented
 ## bullets
-        """
+        """,
             )
             == """
 1. a
@@ -214,7 +215,7 @@ class TestOrderedList:
 *# nested
 *## numbered
 *## list
-        """
+        """,
             )
             == """
   1. nested
@@ -232,7 +233,7 @@ Line
 Next
 
 Break
-"""
+""",
             )
             == """
 1. Item
@@ -255,7 +256,7 @@ Break
 
 # Last
 ## One
-"""
+""",
             )
             == """
 1. First
@@ -276,7 +277,7 @@ Break
 # one
 ## two
 #### four
-"""
+""",
             )
             == r"""
 1. one
@@ -291,7 +292,7 @@ Break
                 """
 # 
 ## 
-        """
+        """,
             )
             == r"""
 1. 
@@ -306,7 +307,7 @@ Break
   # One
       ## Two
  ## Three
-"""
+""",
             )
             == """
 1. One

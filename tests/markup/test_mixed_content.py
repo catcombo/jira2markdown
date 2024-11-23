@@ -1,3 +1,4 @@
+# ruff: noqa: W291, W293
 import pytest
 
 from jira2markdown import convert
@@ -17,7 +18,7 @@ class TestBlockQuoteContent:
 * Item
 ** Line
 {quote}
-"""
+""",
             )
             == """
 > - Item
@@ -183,7 +184,7 @@ class TestBlockElements:
 
         first_line, next_line = expected
         return "\n".join(
-            [first_line % line if i == 0 else next_line % line for i, line in enumerate(text.splitlines())]
+            [first_line % line if i == 0 else next_line % line for i, line in enumerate(text.splitlines())],
         )
 
     def test_headings(self, token, test_input, expected):
@@ -209,7 +210,8 @@ class TestBlockElements:
 
     def test_color(self, token, test_input, expected):
         assert convert(test_input % "{color:red}Red text{color}") == self.render_expected(
-            expected, '<font color="red">Red text</font>'
+            expected,
+            '<font color="red">Red text</font>',
         )
 
     def test_blockquote(self, token, test_input, expected):
@@ -223,7 +225,8 @@ class TestBlockElements:
 
     def test_image(self, token, test_input, expected):
         assert convert(test_input % "!attached-image.gif!") == self.render_expected(
-            expected, "![attached-image.gif](attached-image.gif)"
+            expected,
+            "![attached-image.gif](attached-image.gif)",
         )
 
     def test_link(self, token, test_input, expected):
@@ -280,7 +283,7 @@ class TestPanelContent:
 a block of text surrounded with a *panel*
 line with !image.png|width=300!
 {panel}
-"""
+""",
             )
             == """
 > **My Title**
@@ -297,7 +300,7 @@ line with !image.png|width=300!
 * Item
 ** Line
 {panel}
-"""
+""",
             )
             == """
 > - Item
@@ -312,7 +315,7 @@ class TestListContent:
             convert(
                 """
 ----- Hello, -World-! -----
-"""
+""",
             )
             == """
 ----- Hello, ~~World~~! -----
@@ -326,7 +329,7 @@ Hello
 {quote}
 World
 {quote}
-"""
+""",
             )
             == """
 – 
@@ -340,7 +343,7 @@ Hello
 --------- 
 
 -- 
-"""
+""",
             )
             == """
 --------- 
@@ -361,7 +364,7 @@ Hello
 Some quote
 {quote}
 **** Four
-"""
+""",
             )
             == """
 - Item
@@ -381,7 +384,7 @@ Some quote
 Some quote
 {quote}
 #### Four
-"""
+""",
             )
             == """
 1. Item
@@ -403,7 +406,7 @@ Some quote
 Some quote
 {panel}
 **** Four
-"""
+""",
             )
             == """
 - Item
@@ -423,7 +426,7 @@ Some quote
 Some quote
 {panel}
 #### Four
-"""
+""",
             )
             == """
 1. Item
@@ -445,7 +448,7 @@ Some quote
 Some text
 {color}
 **** Four
-"""
+""",
             )
             == """
 - Item
@@ -469,7 +472,7 @@ Some text
 Some text
 {color}
 #### Four
-"""
+""",
             )
             == """
 1. Item

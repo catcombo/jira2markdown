@@ -192,7 +192,7 @@ class TestColor:
         {color:red}
             look ma, red text!
         {color}
-        """
+        """,
             )
             == """
         <font color="red">
@@ -218,7 +218,7 @@ Preceding line
 bq. First quote
 bq. Second quote
 Next line
-"""
+""",
             )
             == """
 Preceding line
@@ -239,7 +239,7 @@ class TestBlockQuote:
     here is quotable
         content to be quoted
 {quote}
-"""
+""",
             )
             == """
 > here is quotable

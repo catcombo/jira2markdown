@@ -24,7 +24,7 @@ class TestNoformat:
 a block of code
 surrounded with a noformat
 {noformat}
-"""
+""",
             )
             == """
 ```
@@ -44,7 +44,7 @@ class TestCode:
 def test_code():
     assert convert(...)
 {code}
-"""
+""",
             )
             == """
 ```Java
@@ -63,7 +63,7 @@ def test_code():
         <another tag="attribute"/>
     </test>
 {code}
-"""
+""",
             )
             == """
 ```xml
@@ -85,7 +85,7 @@ public String getFoo()
     return foo;
 }
 {code}
-"""
+""",
             )
             == """
 ```Java
@@ -109,7 +109,7 @@ struct Foo {
     int x;
 };
 {code}
-"""
+""",
             )
             == """
 ```C++
@@ -132,7 +132,7 @@ class TestPanel:
   Some text
        more line
 {panel}
-"""
+""",
             )
             == """
 > Some text
@@ -147,7 +147,7 @@ class TestPanel:
 {panel:title=My Title}
 Some text with a title
 {panel}
-"""
+""",
             )
             == """
 > **My Title**
@@ -163,7 +163,7 @@ Some text with a title
 a block of text
 surrounded with a panel
 {panel}
-"""
+""",
             )
             == """
 > **My Title**
