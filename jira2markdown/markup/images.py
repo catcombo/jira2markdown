@@ -27,14 +27,13 @@ class Image(AbstractMarkup):
 
     def action(self, tokens: ParseResults) -> str:
         attrs_str = " ".join(
-            f'{name}="{value}"'
+            f"{name}={value}"
             for name, value in self._parse_attrs(tokens.attrs or []).items()
             if name in self.ALLOWED_ATTRS
         )
         if attrs_str:
-            return f'<img src="{tokens.url}" {attrs_str} />'
-        else:
-            return f"![{tokens.url}]({tokens.url})"
+            attrs_str = f"{{{attrs_str}}}"
+        return f"![{tokens.url}]({tokens.url}){attrs_str}"
 
     @property
     def expr(self) -> ParserElement:
