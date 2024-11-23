@@ -32,8 +32,8 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install
 
-      - name: Run linter
-        run: poetry run flake8
+      - run: poetry run ruff check
 
-      - name: Run tests
-        run: poetry run pytest
+      - run: poetry run ruff format --diff
+
+      - run: poetry run pytest

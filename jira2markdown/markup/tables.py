@@ -31,14 +31,7 @@ class Table(AbstractMarkup):
         # Converts multiline text to one line,
         # because markdown doesn't support multiline text in table cells
         output = [
-            "|"
-            + "|".join(
-                map(
-                    lambda cell: cell.replace("\n", "<br>"),
-                    map(self.markup.transform_string, row),
-                ),
-            )
-            + "|"
+            "|" + "|".join(self.markup.transform_string(cell).replace("\n", "<br>") for cell in row) + "|"
             for row in lines
         ]
 

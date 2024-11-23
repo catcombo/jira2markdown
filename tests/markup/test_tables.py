@@ -1,3 +1,4 @@
+# ruff: noqa: W291
 from jira2markdown.parser import convert
 
 
@@ -9,7 +10,7 @@ class TestTable:
 ||header 1||header 2||header 3||
 |cell 1-1|cell 1-2|cell 1-3|
 |cell 2-1|cell 2-2|cell 2-3|
-"""
+""",
             )
             == """
 |header 1|header 2|header 3|
@@ -26,7 +27,7 @@ class TestTable:
 |header 1||header 2|header 3|
 |cell 1-1|cell 1-2||cell 1-3|
 ||cell 2-1|cell 2-2|cell 2-3|
-"""
+""",
             )
             == """
 |header 1|header 2|header 3|
@@ -43,7 +44,7 @@ class TestTable:
 |header 1|header 2|
 |cell 1-1|cell 1-2|cell 1-3|
 |cell 2-1|
-"""
+""",
             )
             == """
 |header 1|header 2||
@@ -60,7 +61,7 @@ class TestTable:
 ||header 1||header 2||header 3
 |cell 1-1|cell 1-2
 |cell 2-1
-"""
+""",
             )
             == """
 |header 1|header 2|header 3|
@@ -86,7 +87,7 @@ row|sibling row|
 |open 
 end 
 row
-"""
+""",
             )
             == """
 |multi<br>line <br>header||
@@ -104,7 +105,7 @@ text before table
 ||header 1||header 2||
 |cell 1-1|cell 1-2|
 text after table
-"""
+""",
             )
             == """
 text before table
@@ -126,7 +127,7 @@ text after table
 |text|
 |
 |end|
-"""
+""",
             )
             == """
 |text|

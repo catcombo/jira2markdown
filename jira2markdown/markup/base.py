@@ -8,7 +8,7 @@ class AbstractMarkup:
         self.inline_markup = inline_markup
         self.markup = markup
         self.usernames = usernames
-        self.init_kwargs = dict(inline_markup=inline_markup, markup=markup, usernames=usernames)
+        self.init_kwargs = {"inline_markup": inline_markup, "markup": markup, "usernames": usernames}
 
     @property
     def expr(self) -> ParserElement:
