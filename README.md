@@ -5,6 +5,7 @@
 # Table of Contents
 
   * [Prerequisites](#prerequisites)
+  * [Command line tool](#command-line-tool)
   * [Installation](#installation)
   * [Usage](#usage)
   * [Conversion tables](#conversion-tables)
@@ -21,6 +22,20 @@
 # Prerequisites
 
 - Python 3.9+
+
+# Command line tool
+
+Use [pipx](https://github.com/pypa/pipx) to install to isolated environment.
+
+```
+pipx install jira2markdown
+```
+
+There are multiple ways to use command line tool:
+
+1. Provide text to convert as an argument: `jira2markdown "{quote}So many books, so little time{quote}"`
+2. Specify path to a file containing Jira markup text: `jira2markdown -f path/to/file.txt`
+3. Use result of another command as an input: `echo "{quote}So many books, so little time{quote}" | jira2markdown`
 
 # Installation
 

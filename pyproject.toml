@@ -27,6 +27,9 @@ dependencies = [
 [project.urls]
 repository = "https://github.com/catcombo/jira2markdown"
 
+[project.scripts]
+jira2markdown = "jira2markdown.main:main"
+
 [tool.poetry]
 packages = [
     { include = "jira2markdown" },
