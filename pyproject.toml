@@ -1,13 +1,15 @@
-[tool.poetry]
+[project]
 name = "jira2markdown"
 version = "0.4"
 description = "Convert text from JIRA markup to Markdown using parsing expression grammars"
-license = "MIT"
-authors = ["Evgeniy Krysanov <evgeniy.krysanov@gmail.com>"]
+license = { text = "MIT" }
 readme = "README.md"
-repository = "https://github.com/catcombo/jira2markdown"
-packages = [
-    { include = "jira2markdown" },
+requires-python = ">=3.7,<4.0"
+authors = [
+    { name = "Evgeniy Krysanov", email = "evgeniy.krysanov@gmail.com" },
+]
+maintainers = [
+    { name = "Evgeniy Krysanov", email = "evgeniy.krysanov@gmail.com" },
 ]
 keywords = ["jira", "markdown"]
 classifiers = [
@@ -18,12 +20,19 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
 ]
+dependencies = [
+    "pyparsing>=3",
+]
 
-[tool.poetry.dependencies]
-python = "^3.7"
-pyparsing = "*"
+[project.urls]
+repository = "https://github.com/catcombo/jira2markdown"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry]
+packages = [
+    { include = "jira2markdown" },
+]
+
+[tool.poetry.group.dev.dependencies]
 pytest = "*"
 ruff = "*"
 
