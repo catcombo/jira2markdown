@@ -28,7 +28,7 @@ dependencies = [
 repository = "https://github.com/catcombo/jira2markdown"
 
 [project.scripts]
-jira2markdown = "jira2markdown.main:main"
+jira2markdown = "jira2markdown.cli:main"
 
 [tool.poetry]
 packages = [
