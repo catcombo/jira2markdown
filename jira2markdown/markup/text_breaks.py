@@ -1,4 +1,4 @@
-from pyparsing import Keyword, LineEnd, LineStart, Optional, ParserElement, White, WordEnd, WordStart, replaceWith
+from pyparsing import Keyword, LineEnd, LineStart, Optional, ParserElement, White, WordEnd, WordStart, replace_with
 
 from jira2markdown.markup.base import AbstractMarkup
 
@@ -6,19 +6,19 @@ from jira2markdown.markup.base import AbstractMarkup
 class LineBreak(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
-        return Keyword("\\\\", ident_chars="\\").set_parse_action(replaceWith("\n"))
+        return Keyword("\\\\", ident_chars="\\").set_parse_action(replace_with("\n"))
 
 
 class Ndash(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
-        return WordStart() + Keyword("--", ident_chars="-").set_parse_action(replaceWith("–")) + WordEnd()
+        return WordStart() + Keyword("--", ident_chars="-").set_parse_action(replace_with("–")) + WordEnd()
 
 
 class Mdash(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
-        return WordStart() + Keyword("---", ident_chars="-").set_parse_action(replaceWith("—")) + WordEnd()
+        return WordStart() + Keyword("---", ident_chars="-").set_parse_action(replace_with("—")) + WordEnd()
 
 
 class Ruler(AbstractMarkup):
@@ -31,7 +31,7 @@ class Ruler(AbstractMarkup):
         return (
             (LineStart() | LineBreak(**self.init_kwargs).expr)
             + (Optional(White()) + Keyword("----", ident_chars="-") + Optional(White())).set_parse_action(
-                replaceWith("\n----"),
+                replace_with("\n----"),
             )
             + LineEnd()
         )
