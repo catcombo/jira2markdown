@@ -51,11 +51,14 @@ from jira2markdown import convert
 convert("Some *Jira text* formatting [example|https://example.com].")
 # >>> Some **Jira text** formatting [example](https://example.com).
 
-# To convert user mentions provide a mapping Jira internal account id to username 
+# To convert user mentions provide a mapping Jira internal account id to username
 # as a second argument to convert function
-convert("[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespeare' on his lips", {
-    "internal-id": "winston",
-})
+convert(
+    "[Winston Smith|~accountid:internal-id] woke up with the word 'Shakespeare' on his lips",
+    {
+        "internal-id": "winston",
+    },
+)
 # >>> @winston woke up with the word 'Shakespeare' on his lips
 ```
 
@@ -366,11 +369,12 @@ from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.links import Link
 from jira2markdown.markup.text_effects import Color
 
-class CustomColor(Color):
-    ...
 
-class MyElement(AbstractMarkup):
-    ...
+class CustomColor(Color): ...
+
+
+class MyElement(AbstractMarkup): ...
+
 
 elements = MarkupElements()
 elements.replace(Color, CustomColor)
