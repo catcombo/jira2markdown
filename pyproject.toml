@@ -1,6 +1,6 @@
 [project]
 name = "jira2markdown"
-version = "0.5"
+version = "0.5.1"
 description = "Convert text from JIRA markup to Markdown using parsing expression grammars"
 license = "MIT"
 license-files = ["LICENSE"]
