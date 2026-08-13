@@ -24,7 +24,7 @@ from pyparsing import (
     alphas,
     hexnums,
     nums,
-    replaceWith,
+    replace_with,
 )
 
 from jira2markdown.markup.base import AbstractMarkup
@@ -164,7 +164,7 @@ class Quote(AbstractMarkup):
         ROW = (
             LineStart()
             + Optional(White())
-            + Literal("bq. ").set_parse_action(replaceWith("> "))
+            + Literal("bq. ").set_parse_action(replace_with("> "))
             + SkipTo(NL | StringEnd()).set_results_name("text").set_parse_action(self.action)
             + NL
         )
@@ -197,4 +197,4 @@ class EscSpecialChars(AbstractMarkup):
 
     @property
     def expr(self) -> ParserElement:
-        return Literal("*").set_parse_action(replaceWith(r"\*"))
+        return Literal("*").set_parse_action(replace_with(r"\*"))
