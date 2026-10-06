@@ -83,7 +83,7 @@ convert(
 |`_emphasis_`|Not converted (the same syntax)|
 |`??citation??`|`<q>citation</q>`|
 |`-deleted-`|`~~deleted~~`|
-|`+inserted+`|`inserted`|
+|`+inserted+`|`<u>inserted</u>`|
 |`^superscript^`|`<sup>superscript</sup>`|
 |`~subscript~`|`<sub>subscript</sub>`|
 |`{{monospaced}}`|`` `monospaced` ``|
