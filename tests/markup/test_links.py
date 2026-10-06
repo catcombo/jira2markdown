@@ -59,3 +59,8 @@ class TestMention:
         assert convert("[~userA].") == "@userA."
         assert convert("[~userA]:") == "@userA:"
         assert convert("[~userA]?") == "@userA?"
+
+
+class TestUrl:
+    def test_bare_url_is_unchanged(self):
+        assert convert("See http://example.com/-path- now") == "See http://example.com/-path- now"

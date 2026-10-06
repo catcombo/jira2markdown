@@ -1,3 +1,4 @@
+import re
 from string import punctuation
 
 from pyparsing import (
@@ -9,6 +10,7 @@ from pyparsing import (
     ParserElement,
     ParseResults,
     PrecededBy,
+    Regex,
     SkipTo,
     StringEnd,
     StringStart,
@@ -66,6 +68,16 @@ class Link(AbstractMarkup):
             + SkipTo("]").set_results_name("url")
             + "]",
         ).set_parse_action(self.action)
+
+
+class Url(AbstractMarkup):
+    """
+    Keeps bare URLs as is, so their characters aren't converted by text effects.
+    """
+
+    @property
+    def expr(self) -> ParserElement:
+        return Regex(r"(https?|ftp)://[^\s]+", flags=re.IGNORECASE)
 
 
 class Attachment(AbstractMarkup):
