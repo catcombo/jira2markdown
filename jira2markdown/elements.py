@@ -6,7 +6,7 @@ from jira2markdown.markup.advanced import Code, Noformat, Panel
 from jira2markdown.markup.base import AbstractMarkup
 from jira2markdown.markup.headings import Headings
 from jira2markdown.markup.images import Image
-from jira2markdown.markup.links import Attachment, Link, MailTo, Mention
+from jira2markdown.markup.links import Attachment, Link, MailTo, Mention, Url
 from jira2markdown.markup.lists import OrderedList, UnorderedList
 from jira2markdown.markup.tables import Table
 from jira2markdown.markup.text_breaks import LineBreak, Mdash, Ndash, Ruler
@@ -39,6 +39,7 @@ class MarkupElements(list):
                 MailTo,
                 Attachment,
                 Link,
+                Url,
                 Image,
                 Table,
                 Headings,
