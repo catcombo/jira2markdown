@@ -177,6 +177,9 @@ class TestColor:
             == 'start <font color="#ff7f3f">rgba color</font> text'
         )
 
+    def test_color_values_below_16(self):
+        assert convert("{color:rgba(0, 1, 2, 0)}colored{color}") == '<font color="#000102">colored</font>'
+
     def test_line_endings(self):
         assert convert("{color:#0077ff}colored{color}") == '<font color="#0077ff">colored</font>'
         assert convert("\n{color:#0077ff}colored{color}\n") == '\n<font color="#0077ff">colored</font>\n'
