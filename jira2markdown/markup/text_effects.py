@@ -117,7 +117,7 @@ class Color(AbstractMarkup):
         text = self.inline_markup.transform_string(tokens.text)
 
         if tokens.red and tokens.green and tokens.blue:
-            color = f"#{int(tokens.red):x}{int(tokens.green):x}{int(tokens.blue):x}"
+            color = f"#{int(tokens.red):02x}{int(tokens.green):02x}{int(tokens.blue):02x}"
         else:
             color = tokens.color[0]
 
