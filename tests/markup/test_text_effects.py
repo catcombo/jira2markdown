@@ -1,3 +1,5 @@
+import pytest
+
 from jira2markdown.parser import convert
 
 
@@ -164,6 +166,33 @@ class TestSubscript:
         assert convert("~some~   ~text~") == "<sub>some</sub>   <sub>text</sub>"
         assert convert("~~text~~") == "~<sub>text</sub>~"
         assert convert("~~some~~~~text~~") == "~<sub>some</sub>~~<sub>text</sub>~"
+
+
+@pytest.mark.parametrize(
+    "token,esc_token,st,et",
+    [
+        ("*", r"\*", "**", "**"),
+        ("-", "-", "~~", "~~"),
+        ("+", "+", "<u>", "</u>"),
+        ("_", "_", "_", "_"),
+        ("??", "??", "<q>", "</q>"),
+        ("^", "^", "<sup>", "</sup>"),
+        ("~", "~", "<sub>", "</sub>"),
+    ],
+    ids=["bold", "strikethrough", "underline", "emphasis", "inlinequote", "superscript", "subscript"],
+)
+class TestTokenInCurlyBraces:
+    def test_basic_conversion(self, token, esc_token, st, et):
+        assert convert(f"inside {{{token}}}some long{{{token}}} text") == f"inside {st}some long{et} text"
+
+    def test_mixed_tokens(self, token, esc_token, st, et):
+        assert convert(f"inside {{{token}}}some long{token} text") == f"inside {st}some long{et} text"
+
+    def test_edge_cases(self, token, esc_token, st, et):
+        assert convert(f"start {{{token}}}some text {token} end") == f"start {{{esc_token}}}some text {esc_token} end"
+        assert convert(f"start {{{token}}} some text{token} end") == f"start {{{st}}} some text{et} end"
+        assert convert(f"start {token} some text{{{token}}} end") == f"start {esc_token} some text{{{esc_token}}} end"
+        assert convert(f"start {token}some text {{{token}}} end") == f"start {esc_token}some text {{{esc_token}}} end"
 
 
 class TestColor:
