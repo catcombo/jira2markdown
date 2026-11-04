@@ -5,7 +5,7 @@ description = "Convert text from JIRA markup to Markdown using parsing expressio
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
-requires-python = ">=3.9,<4.0"
+requires-python = ">=3.10,<4.0"
 authors = [
     { name = "Evgeniy Krysanov", email = "evgeniy.krysanov@gmail.com" },
 ]
