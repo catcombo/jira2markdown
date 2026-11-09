@@ -18,7 +18,6 @@ from pyparsing import (
     SkipTo,
     StringEnd,
     StringStart,
-    Suppress,
     White,
     Word,
     alphas,
@@ -39,7 +38,9 @@ class QuotedElement(AbstractMarkup):
 
     def action(self, tokens: ParseResults) -> str:
         return (
-            self.QUOTE_CHAR + self.inline_markup.transform_string(tokens[0]) + (self.END_QUOTE_CHAR or self.QUOTE_CHAR)
+            self.QUOTE_CHAR
+            + self.inline_markup.transform_string(tokens.text)
+            + (self.END_QUOTE_CHAR or self.QUOTE_CHAR)
         )
 
     def get_ignore_expr(self) -> ParserElement:
@@ -48,12 +49,12 @@ class QuotedElement(AbstractMarkup):
     @property
     def expr(self) -> ParserElement:
         NON_ALPHANUMS = Regex(r"\W", flags=re.UNICODE)
-        TOKEN = Suppress(self.TOKEN)
+        TOKEN = Literal(self.TOKEN) | Literal("{" + self.TOKEN + "}")
         IGNORE = White() + TOKEN | self.get_ignore_expr()
         ELEMENT = Combine(
             TOKEN
             + (~White() & ~Char(self.TOKEN))
-            + SkipTo(TOKEN, ignore=IGNORE, fail_on="\n")
+            + SkipTo(TOKEN, ignore=IGNORE, fail_on="\n").set_results_name("text")
             + TOKEN
             + FollowedBy(NON_ALPHANUMS | StringEnd()),
         )
@@ -86,6 +87,11 @@ class Underline(QuotedElement):
     TOKEN = "+"
     QUOTE_CHAR = "<u>"
     END_QUOTE_CHAR = "</u>"
+
+
+class Emphasis(QuotedElement):
+    TOKEN = "_"
+    QUOTE_CHAR = "_"
 
 
 class InlineQuote(QuotedElement):
