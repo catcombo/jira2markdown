@@ -13,7 +13,10 @@ def main():
         group.add_argument("-f", "--file", nargs="?", type=Path)
 
         args = parser.parse_args()
-        text = args.text or args.file.read_text()
+        try:
+            text = args.text or args.file.read_text()
+        except OSError as exc:
+            parser.error(f"cannot read file {args.file}: {exc.strerror or exc}")
     else:
         text = sys.stdin.read()
 
